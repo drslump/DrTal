@@ -1,0 +1,602 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Iván Montes" />
+    <meta name="description" content="DrTal - a TAL implementation in PHP" />
+    <meta name="copyright" content="Copyright 2008 Iván Montes" />
+    <title>
+      - DrTal docs
+    </title>
+    <link rel="stylesheet" type="text/css" media="screen" href="../_resources/styles/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="../_resources/styles/drtal.css" />
+<script type="text/javascript" src="../_resources/scripts/mootools.v1.11.js">
+</script>
+<script type="text/javascript" src="../_resources/scripts/docs.js">
+</script>
+  </head>
+  <body>
+    <div id="header">
+      <div id="header-inside">
+        <div id="logo">
+          <h1>
+            <a href="/"><span>DrTal - a TAL implementation in PHP</span></a>
+          </h1>
+        </div>
+        <p id="sponsor">
+          <span>sponsored by</span> <a href="http://netxus.es"><span>Netxus</span></a>
+        </p>
+        <ul id="menu">
+          <li>
+            <a href="http://pollinimini.net">home</a>
+          </li>
+          <li>
+            <a class="selected" href="../DrTal-php.html">docs</a>
+          </li>
+          <li>
+            <a href="http://blog.netxus.es">blog</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div id="Menu">
+      <div class="MEntry">
+        <div class="MFile">
+          <a href="../DrTal-php.html">DrTal</a>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Template</a>
+          <div class="MGroupContent" id="MGroupContent1">
+            <div class="MEntry">
+              <div class="MFile" id="MSelected">
+                Context
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Template-php.html">Template</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Template/Xml-php.html">Template_Xml</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Template/Xhtml-php.html">Template_Xhtml</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Template/HtmlTidy-php.html">Template_HtmlTidy</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Parser</a>
+          <div class="MGroupContent" id="MGroupContent2">
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Parser-php.html">Parser</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Parser/Namespace-php.html">Namespace</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Storage</a>
+          <div class="MGroupContent" id="MGroupContent3">
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Storage-php.html">Storage</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Storage/File-php.html">Storage/ File</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Storage/String-php.html">Storage/ String</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Other</a>
+          <div class="MGroupContent" id="MGroupContent4">
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="../PHPTAL-php.html">PHPTAL</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Parser/Util/StringStream-php.html">setVariable</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Parser/Attribute-php.html">tales</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MFile">
+          <a href="../Documentation-txt.html">TAL Overview</a>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Index</a>
+          <div class="MGroupContent" id="MGroupContent5">
+            <div class="MEntry">
+              <div class="MIndex">
+                <a href="../_glossary/General.html">Everything</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MIndex">
+                <a href="../_glossary/Classes.html">Classes</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MIndex">
+                <a href="../_glossary/Files.html">Files</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MIndex">
+                <a href="../_glossary/Functions.html">Functions</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="Index">
+      <div class="CClass">
+        <div class="CTopic">
+          <h2 class="CTitle">
+            <a name="DrTal_Context" id="DrTal_Context"> </a>DrTal_Context
+          </h2>
+          <div class="CBody">
+            <p class="CParagraph">
+              Default context handling class which stores the variables for the associated template and offers helper functions like a path resolver or escaping functions.
+            </p>
+            <h4 class="CHeading">
+              See also
+            </h4>
+            <p class="CParagraph">
+              <a href="Template-php.html#DrTal_Template" class="LClass" id="link13" title="Abstract class defining the basic methods for a template" name="link13">DrTal_Template</a>
+            </p>
+            <div class="Summary">
+              <div class="STitle">
+                Summary
+              </div>
+              <div class="SBorder">
+                <table border="0" cellspacing="0" cellpadding="0" class="STable">
+                  <tr>
+                    <td class="SEntrySize">
+                      <div class="SGroup">
+                        <div class="SEntry">
+                          <a href="#DrTal_Context.Functions">Functions</a>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="SDescriptionSize">
+                      <div class="SGroup">
+                        <div class="SDescription">
+                           
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Context.__construct" id="link7" title="public function __construct(DrTal_Template $tpl)" name="link7">__construct</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                             
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Context.getTemplate" id="link8" title="public function getTemplate()Returns the template object associated with this context" name="link8">getTemplate</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Returns the template object associated with this context
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Context.push" id="link9" title="public function push()Pushes the variables stack (last in first out)" name="link9">push</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Pushes the variables stack (last in first out)
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Context.pop" id="link10" title="public function pop()Pops the variables stack (last in first out)" name="link10">pop</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Pops the variables stack (last in first out)
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Context.get" id="link11" title="public function get($name)Gets a variable from the context" name="link11">get</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Gets a variable from the context
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Context.set" id="link12" title="public function set($name,$value)Sets a variable in the context" name="link12">set</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Sets a variable in the context
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="CGroup">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Context.Functions" id="DrTal_Context.Functions"> </a>Functions
+          </h3>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Context.__construct" id="DrTal_Context.__construct"> </a>__construct
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function __construct(
+                        </td>
+                        <td class="PType" nowrap="nowrap">
+                          DrTal_Template 
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $tpl
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $tpl
+                </td>
+                <td class="CDLDescription">
+                  The <a href="Template-php.html#DrTal_Template" class="LClass" id="link14" title="Abstract class defining the basic methods for a template" name="link14">DrTal_Template</a>
+                  instantiating this object
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Context.getTemplate" id="DrTal_Context.getTemplate"> </a>getTemplate
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    public function getTemplate()
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Returns the template object associated with this context
+            </p>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              A <a href="Template-php.html#DrTal_Template" class="LClass" id="link15" title="Abstract class defining the basic methods for a template" name="link15">DrTal_Template</a> object
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Context.push" id="DrTal_Context.push"> </a>push
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    public function push()
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Pushes the variables stack (last in first out)
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Context.pop" id="DrTal_Context.pop"> </a>pop
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    public function pop()
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Pops the variables stack (last in first out)
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Context.get" id="DrTal_Context.get"> </a>get
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function get(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $name
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Gets a variable from the context
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $name
+                </td>
+                <td class="CDLDescription">
+                  The name of the variable to get
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              The variable value or null if the variable name was not found
+            </p>
+            <h4 class="CHeading">
+              Note
+            </h4>
+            <p class="CParagraph">
+              If the context has been pushed this method will seek the variable in all the stack levels
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Context.set" id="DrTal_Context.set"> </a>set
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function set(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $name,
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $value
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Sets a variable in the context
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $name
+                </td>
+                <td class="CDLDescription">
+                  The name of the variable to set
+                </td>
+              </tr>
+              <tr>
+                <td class="CDLEntry">
+                  $value
+                </td>
+                <td class="CDLDescription">
+                  The desired value for the variable
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Note
+            </h4>
+            <p class="CParagraph">
+              If the context has been pushed this method will set the variable in the last pushed one.  So the variable will be lost when poping the context.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="littlefoot">
+      <p>
+        Documentation by <a href="http://pollinimini.net">Iván Montes</a>, generated by <a href="http://naturaldocs.org">NaturalDocs</a> and <a href="http://php.net/dom">libxml2</a> and <a href=
+        "http://php.net/tidy">Tidy</a> and <a href="http://qbnz.com/highlighter/">GeSHi</a>. Layout based on <a href="http://docs.mootools.net">mootools docs</a>
+      </p>
+    </div>
+    <div id="footer">
+      <div id="footer-inside">
+        <a class="copy" href="http://blog.netxus.es"></a>
+        <p>
+          copyright © 2008 <a href="http://blog.netxus.es">Iván Montes</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

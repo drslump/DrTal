@@ -1,0 +1,1199 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Iván Montes" />
+    <meta name="description" content="DrTal - a TAL implementation in PHP" />
+    <meta name="copyright" content="Copyright 2008 Iván Montes" />
+    <title>
+      - DrTal docs
+    </title>
+    <link rel="stylesheet" type="text/css" media="screen" href="../_resources/styles/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="../_resources/styles/drtal.css" />
+<script type="text/javascript" src="../_resources/scripts/mootools.v1.11.js">
+</script>
+<script type="text/javascript" src="../_resources/scripts/docs.js">
+</script>
+  </head>
+  <body>
+    <div id="header">
+      <div id="header-inside">
+        <div id="logo">
+          <h1>
+            <a href="/"><span>DrTal - a TAL implementation in PHP</span></a>
+          </h1>
+        </div>
+        <p id="sponsor">
+          <span>sponsored by</span> <a href="http://netxus.es"><span>Netxus</span></a>
+        </p>
+        <ul id="menu">
+          <li>
+            <a href="http://pollinimini.net">home</a>
+          </li>
+          <li>
+            <a class="selected" href="../DrTal-php.html">docs</a>
+          </li>
+          <li>
+            <a href="http://blog.netxus.es">blog</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div id="Menu">
+      <div class="MEntry">
+        <div class="MFile">
+          <a href="../DrTal-php.html">DrTal</a>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Template</a>
+          <div class="MGroupContent" id="MGroupContent1">
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Context-php.html">Context</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Template-php.html">Template</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Template/Xml-php.html">Template_Xml</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Template/Xhtml-php.html">Template_Xhtml</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Template/HtmlTidy-php.html">Template_HtmlTidy</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Parser</a>
+          <div class="MGroupContent" id="MGroupContent2">
+            <div class="MEntry">
+              <div class="MFile" id="MSelected">
+                Parser
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Parser/Namespace-php.html">Namespace</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Storage</a>
+          <div class="MGroupContent" id="MGroupContent3">
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Storage-php.html">Storage</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Storage/File-php.html">Storage/ File</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Storage/String-php.html">Storage/ String</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Other</a>
+          <div class="MGroupContent" id="MGroupContent4">
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="../PHPTAL-php.html">PHPTAL</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Parser/Util/StringStream-php.html">setVariable</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Parser/Attribute-php.html">tales</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MFile">
+          <a href="../Documentation-txt.html">TAL Overview</a>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Index</a>
+          <div class="MGroupContent" id="MGroupContent5">
+            <div class="MEntry">
+              <div class="MIndex">
+                <a href="../_glossary/General.html">Everything</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MIndex">
+                <a href="../_glossary/Classes.html">Classes</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MIndex">
+                <a href="../_glossary/Files.html">Files</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MIndex">
+                <a href="../_glossary/Functions.html">Functions</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="Index">
+      <div class="CClass">
+        <div class="CTopic">
+          <h2 class="CTitle">
+            <a name="DrTal_Parser" id="DrTal_Parser"> </a>DrTal_Parser
+          </h2>
+          <div class="CBody">
+            <p class="CParagraph">
+              This class takes care of parsing a template and calling the registered hooks which generate the final compiled template.
+            </p>
+            <h4 class="CHeading">
+              Notes
+            </h4>
+            <p class="CParagraph">
+              XMLReader works always with text in UTF8, so all the text operations should take this in consideration.
+            </p>
+            <p class="CParagraph">
+              XMLReader class constants are available since PHP 5.1
+            </p>
+            <div class="Summary">
+              <div class="STitle">
+                Summary
+              </div>
+              <div class="SBorder">
+                <table border="0" cellspacing="0" cellpadding="0" class="STable">
+                  <tr>
+                    <td class="SEntrySize">
+                      <div class="SGroup">
+                        <div class="SEntry">
+                          <a href="#DrTal_Parser.Functions">Functions</a>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="SDescriptionSize">
+                      <div class="SGroup">
+                        <div class="SDescription">
+                           
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Parser.__construct" id="link13" title="public function __construct(DrTal_Template $template)Object constructor, instantiates a new parser object" name=
+                            "link13">__construct</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Object constructor, instantiates a new parser object
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Parser.getCodegen" id="link14" title="public function getCodegen()Returns the code generator helper object" name="link14">getCodegen</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Returns the code generator helper object
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Parser.registerEntity" id="link15" title="function registerEntity($name,  $value =  null)Registers a new entity name. " name="link15">registerEntity</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Registers a new entity name.
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Parser.unregisterEntity" id="link16" title="function unregisterEntity($name)Unregisters an entity" name="link16">unregisterEntity</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Unregisters an entity
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Parser.registerNamespace" id="link17" title=
+                            "public function registerNamespace(DrTal_Parser_Namespace $nsObj,   $uri =  null, $prefix =  null)Registers a new namespace handler." name="link17">registerNamespace</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Registers a new namespace handler.
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Parser.unregisterNamespace" id="link18" title="public function unregisterNamespace($uri)Unregisters a namespace" name="link18">unregisterNamespace</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Unregisters a namespace
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Parser.registerFilter" id="link19" title="public function registerFilter($name,$filterObj)Registers a new content filter" name="link19">registerFilter</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Registers a new content filter
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Parser.unregisterFilter" id="link20" title="public function unregisterFilter($name)Unregisters a filter" name="link20">unregisterFilter</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Unregisters a filter
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Parser.registerTales" id="link21" title="public function registerTales($name,$callback)Registers a new tales hadnler" name="link21">registerTales</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Registers a new tales hadnler
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Parser.unregisterTales" id="link22" title="public function unregisterTales($name)Unregisters a tales handler" name="link22">unregisterTales</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Unregisters a tales handler
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Parser.getTales" id="link23" title="public function getTales($modifier)Returns the tales handler associated to the supplied modifier" name=
+                            "link23">getTales</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Returns the tales handler associated to the supplied modifier
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Parser.build" id="link24" title="public function build()Generates a compiled template" name="link24">build</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Generates a compiled template
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="CGroup">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Parser.Functions" id="DrTal_Parser.Functions"> </a>Functions
+          </h3>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Parser.__construct" id="DrTal_Parser.__construct"> </a>__construct
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function __construct(
+                        </td>
+                        <td class="PType" nowrap="nowrap">
+                          DrTal_Template 
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $template
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Object constructor, instantiates a new parser object
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $template
+                </td>
+                <td class="CDLDescription">
+                  a <a href="Template-php.html#DrTal_Template" class="LClass" id="link25" title="Abstract class defining the basic methods for a template" name="link25">DrTal_Template</a> object
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Parser.getCodegen" id="DrTal_Parser.getCodegen"> </a>getCodegen
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    public function getCodegen()
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Returns the code generator helper object
+            </p>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              A &lt;DrTal_Parser_Codegen&gt; object
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Parser.registerEntity" id="DrTal_Parser.registerEntity"> </a>registerEntity
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          function registerEntity(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $name,
+                        </td>
+                        <td class="PDefaultValuePrefix">
+                            
+                        </td>
+                        <td class="PDefaultValue" width="100%"></td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $value
+                        </td>
+                        <td class="PDefaultValuePrefix">
+                           = 
+                        </td>
+                        <td class="PDefaultValue" width="100%">
+                          null
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Registers a new entity name.  Entities can be used as compile-time constants.
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $name
+                </td>
+                <td class="CDLDescription">
+                  the entity name
+                </td>
+              </tr>
+              <tr>
+                <td class="CDLEntry Optional">
+                  $value
+                </td>
+                <td class="CDLDescription">
+                  the entity value
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              true on success, false on failure
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Parser.unregisterEntity" id="DrTal_Parser.unregisterEntity"> </a>unregisterEntity
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          function unregisterEntity(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $name
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Unregisters an entity
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $name
+                </td>
+                <td class="CDLDescription">
+                  the entity name
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              true if the entity existed and was removed, false if not
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Parser.registerNamespace" id="DrTal_Parser.registerNamespace"> </a>registerNamespace
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function registerNamespace(
+                        </td>
+                        <td class="PType" nowrap="nowrap">
+                          DrTal_Parser_Namespace 
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $nsObj,
+                        </td>
+                        <td class="PDefaultValuePrefix">
+                            
+                        </td>
+                        <td class="PDefaultValue" width="100%"></td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td class="PType" nowrap="nowrap">
+                           
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $uri
+                        </td>
+                        <td class="PDefaultValuePrefix">
+                           = 
+                        </td>
+                        <td class="PDefaultValue" width="100%">
+                          null,
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td class="PType" nowrap="nowrap">
+                           
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $prefix
+                        </td>
+                        <td class="PDefaultValuePrefix">
+                           = 
+                        </td>
+                        <td class="PDefaultValue" width="100%">
+                          null
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Registers a new namespace handler.
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $nsObj
+                </td>
+                <td class="CDLDescription">
+                  the entity name
+                </td>
+              </tr>
+              <tr>
+                <td class="CDLEntry Optional">
+                  $url
+                </td>
+                <td class="CDLDescription">
+                  the namespace url, if not set the object is queried for it
+                </td>
+              </tr>
+              <tr>
+                <td class="CDLEntry Optional">
+                  $prefix
+                </td>
+                <td class="CDLDescription">
+                  the namespace prefix, if not set the object is queried for it
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              true on success
+            </p>
+            <h4 class="CHeading">
+              Throws
+            </h4>
+            <ul class="CBulletList">
+              <li>&lt;DrTal_Parser_Exception&gt; if $nsObj does not inherit from &lt;DrTal_Parser_Namespace&gt;
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Parser.unregisterNamespace" id="DrTal_Parser.unregisterNamespace"> </a>unregisterNamespace
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function unregisterNamespace(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $uri
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Unregisters a namespace
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $url
+                </td>
+                <td class="CDLDescription">
+                  the namesapce url
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              true if the namespace existed and was removed, false if not
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Parser.registerFilter" id="DrTal_Parser.registerFilter"> </a>registerFilter
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function registerFilter(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $name,
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $filterObj
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Registers a new content filter
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $name
+                </td>
+                <td class="CDLDescription">
+                  the desired filter name
+                </td>
+              </tr>
+              <tr>
+                <td class="CDLEntry">
+                  $filterObj
+                </td>
+                <td class="CDLDescription">
+                  the &lt;DrTal_Parser_Filter&gt; object to register
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              true on success
+            </p>
+            <h4 class="CHeading">
+              Throws
+            </h4>
+            <ul class="CBulletList">
+              <li>&lt;DrTal_Parser_Exception&gt; if $filterObj does not inherit from &lt;DrTal_Parser_Filter&gt;
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Parser.unregisterFilter" id="DrTal_Parser.unregisterFilter"> </a>unregisterFilter
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function unregisterFilter(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $name
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Unregisters a filter
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $name
+                </td>
+                <td class="CDLDescription">
+                  the filter name used when registered
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              true if the filter existed and was removed, false if not
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Parser.registerTales" id="DrTal_Parser.registerTales"> </a>registerTales
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function registerTales(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $name,
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $callback
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Registers a new tales hadnler
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $name
+                </td>
+                <td class="CDLDescription">
+                  the desired tales name
+                </td>
+              </tr>
+              <tr>
+                <td class="CDLEntry">
+                  $callback
+                </td>
+                <td class="CDLDescription">
+                  a function or method to handle this tales expression
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              true on success
+            </p>
+            <h4 class="CHeading">
+              Throws
+            </h4>
+            <ul class="CBulletList">
+              <li>&lt;DrTal_Parser_Exception&gt; if $callback is not actually callable
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Parser.unregisterTales" id="DrTal_Parser.unregisterTales"> </a>unregisterTales
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function unregisterTales(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $name
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Unregisters a tales handler
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $name
+                </td>
+                <td class="CDLDescription">
+                  the tales name to unregister
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              true if the tales handler existed and was removed, false if not
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Parser.getTales" id="DrTal_Parser.getTales"> </a>getTales
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function getTales(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $modifier
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Returns the tales handler associated to the supplied modifier
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $modifier
+                </td>
+                <td class="CDLDescription">
+                  the tales handler id
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              A callable variable if found or false if not
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Parser.build" id="DrTal_Parser.build"> </a>build
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    public function build()
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Generates a compiled template
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $tplObj
+                </td>
+                <td class="CDLDescription">
+                  a <a href="Template-php.html#DrTal_Template" class="LClass" id="link26" title="Abstract class defining the basic methods for a template" name="link26">DrTal_Template</a> object
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Throws
+            </h4>
+            <ul class="CBulletList">
+              <li>&lt;DrTal_Parser_Exception&gt; if there was an error generating the template
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="littlefoot">
+      <p>
+        Documentation by <a href="http://pollinimini.net">Iván Montes</a>, generated by <a href="http://naturaldocs.org">NaturalDocs</a> and <a href="http://php.net/dom">libxml2</a> and <a href=
+        "http://php.net/tidy">Tidy</a> and <a href="http://qbnz.com/highlighter/">GeSHi</a>. Layout based on <a href="http://docs.mootools.net">mootools docs</a>
+      </p>
+    </div>
+    <div id="footer">
+      <div id="footer-inside">
+        <a class="copy" href="http://blog.netxus.es"></a>
+        <p>
+          copyright © 2008 <a href="http://blog.netxus.es">Iván Montes</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

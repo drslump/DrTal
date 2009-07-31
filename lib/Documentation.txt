@@ -1,0 +1,7 @@
+Section: TAL Overview
+	TAL stands for Template Attribute Language and has its origins in the Zope community.
+
+Section: Tales modifiers
+
+	path 	- This is the default modifier
+	string	- Interprets the expression as a string, interpolating any contained variables

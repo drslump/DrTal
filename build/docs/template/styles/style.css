@@ -1,0 +1,424 @@
+/*
+	This file is part of Natural Docs, which is Copyright (C) 2003-2005 Greg Valure
+	Natural Docs is licensed under the GPL
+*/
+
+body {
+	font: 11px/1.2 Lucida Grande, Arial, Tahoma, sans-serif;
+	color: #323234;
+	margin: 0;
+	padding: 0;
+	background: #1d1d20;
+}
+
+/*redefine*/
+
+::-moz-selection {
+	background: #111;
+	color: #eee;
+}
+
+::selection {
+	background: #111;
+	color: #eee;
+}
+
+/*links*/
+
+a:link, a:visited {
+	color: #7389ae;
+}
+
+a:hover, a:active {
+	color: #face8f;
+}
+
+h1, h2, h3, h4, h5, p, blockquote {
+	margin: 0;
+	padding: 0;
+}
+
+h1 {
+	font-size: 20px;
+	padding: 5px 0;
+}
+
+h2 {
+	font-size: 18px;
+	padding: 4px 0;
+}
+
+h3 {
+	font-size: 16px;
+	padding: 3px 0;
+}
+
+h4 {
+	font-size: 14px;
+	padding: 2px 0;
+}
+
+p {
+	padding: 5px 0;
+}
+
+#MSubTitle {
+	font-size: 11px;
+}
+
+/*menu*/
+
+#Menu {
+	line-height: 1;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 210px;
+	margin-top: 86px;
+}
+
+.MGroup {
+	font-weight: bold;
+	font-size: 11px;
+	padding: 0 0 5px;
+	text-transform: uppercase;
+	text-decoration: none;
+}
+
+.MGroup a {
+	padding: 6px 10px;
+	text-decoration: none;
+	display: block;
+	background: #7389ae;
+	color: #fff;
+	text-align: right;
+	text-shadow: 2px 2px 1px #5e708e;
+	border-right: 4px solid #5e708e;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.MGroupContent {
+	font-size: 11px;
+	padding-top: 5px;
+	font-weight: normal;
+	text-transform: none;
+}
+
+#MSelected, .MFile a:link, .MFile a:visited, .MIndex a:link, .MIndex a:visited {
+	display: block;
+	padding: 4px 4px 4px 30px;
+	margin: 2px 0;
+	background: #232529;
+	color: #a4acba;
+	text-decoration: none;
+	text-align: left;
+	text-shadow: 2px 2px 1px #1c1d1f;
+	border-right: 4px solid #1c1d1f;
+	font-weight: bold;
+}
+
+.MFile a:hover, .MFile a:active, .MIndex a:hover, .MIndex a:active {
+	background-color: #3e4043;
+	color: #faec8f;
+	border-right: 4px solid #303234;
+	text-shadow: 2px 2px 1px #303234;
+}
+
+#MSelected {
+	background-color: #fff;
+	color: #333;
+	text-shadow: none;
+	border-right: 4px solid #fff;
+}
+
+/*content, paragraphs, code, headings*/
+
+#Content, #Index {
+	background: #fff;
+	margin-left: 210px;
+	padding: 15px 30px 15px 15px;
+	font-size: 13px;
+	min-height: 600px;
+}
+
+#MainTopic .CTitle, .IPageTitle {
+	padding: 5px 10px;
+	background: #78ba91;
+	color: #fff;
+	margin-bottom: 10px;
+	text-shadow: 2px 2px 1px #679956;
+}
+
+.CClass .CTitle, .CSection .CTitle {
+	background: #c17878;
+	padding: 5px 10px;
+	background-repeat: no-repeat;
+	background-position: center left;
+	color: #fff;
+	text-shadow: 2px 2px 1px #935b5c;
+}
+
+.CSection .CTitle {
+	background-color: #ddd;
+	color: #666;
+	text-shadow: none;
+}
+
+.CGroup .CTitle, .INavigationBar {
+	background: #ccc;
+	padding: 3px 10px;
+	font-size: 18px;
+	text-transform: uppercase;
+	font-size: 15px;
+}
+
+.CProperty .CTitle, .CFunction .CTitle {
+	color: #fff;
+	background: #7389ae;
+	padding: 3px 10px;
+	background-repeat: no-repeat;
+	background-position: center left;
+	text-shadow: 2px 2px 1px #5e708e;
+}
+
+.CProperty .CTitle {
+	padding-left: 50px;
+	background-image: url(../images/method.png);
+}
+
+.CFunction .CTitle {
+	padding-left: 60px;
+	background-image: url(../images/function.png);
+}
+
+.CClass .CTitle {
+	padding-left: 40px;
+	background-image: url(../images/class.png);
+}
+
+pre {
+	font: 12px "Monaco", "Courier New", Monospace;
+	background: #f5f5f5;
+	border: 1px solid #ddd;
+	padding: 10px 15px;
+	color: #444;
+	margin-left: 30px;
+	overflow: auto !important;
+	overflow: scroll;
+	line-height: 1.5;
+}
+
+.CParagraph, .CDescriptionList {
+	padding: 5px 5px 5px 30px;
+}
+
+.CDescriptionList tr {
+	padding: 2px 0;
+}
+
+.CDLEntry {
+	padding: 0 10px 0 0;
+	color: #666;
+	font: 12px "Monaco", "Courier New", Monospace;
+}
+.CDLEntry.Optional {
+	color: #888;
+	font-style: italic;
+}
+
+
+h4.CHeading, .STitle {
+	padding-left: 10px;
+	border-bottom: 1px solid #eee;
+	border-top: 1px solid #eee;
+	background: #fdfdfd;
+	color: #54545d;
+}
+
+.CProperty .CTitle, .CFunction .CTitle, .CGroup .CTitle, .CClass .CTitle, .CSection .CTitle {
+	margin: 15px 0 10px;
+}
+
+/*summary*/
+
+.SBody {
+	margin-left: 30px;
+}
+
+.STitle {
+	font-size: 14px;
+	padding: 2px 10px;
+	font-weight: bold;
+}
+
+.STable {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 12px;
+}
+
+.STable a:link, .STable a:visited {
+	color: #875938;
+}
+
+.STable a:hover, .STable a:active {
+	color: #342113;
+}
+
+.SBody {
+	padding: 10px;
+	background: #fff9f0;
+}
+
+.SMarked {
+	background: #ffeed6;
+}
+
+.STable td {
+	border: 2px solid #fff;
+	padding: 3px 6px;
+}
+
+h4.CHeading, .STitle {
+	margin: 10px 0 7px;
+}
+
+.SMain {
+	font-size: 16px;
+	background: #ffca7f;
+}
+
+.SMain td {
+	padding: 4px 6px;
+}
+
+.SProperty .SEntry, .SFunction .SEntry {
+	text-align: right;
+}
+
+.SEntry {
+	width: 170px;
+}
+
+.SClass, .SSection {
+	font-size: 14px;
+	background: #ffd599;
+}
+
+.SGroup {
+	font-size: 13px;
+	background: #ffdfb2;
+}
+
+/*index*/
+
+#Index table {
+	padding: 10px;
+	font-size: 14px;
+}
+
+#Index table td {
+	padding: 2px 6px;
+}
+
+.IHeading, .ISymbolPrefix {
+	font-weight: bold;
+	font-size: 15px;
+	background: #eee;
+}
+
+td.IHeading {
+	padding-top: 10px;
+	border-top: 4px solid #fff;
+	text-align: center;
+}
+
+.ISubIndex {
+	padding-left: 20px;
+}
+
+.ISubIndex a {
+	display: block;
+}
+
+.IPageTitle {
+	font-size: 24px;
+	font-weight: bold;
+}
+
+.INavigationBar {
+	font-size: 13px;
+	font-weight: bold;
+	text-align: center;
+}
+
+#Footer {
+	margin-left: 200px;
+	padding: 10px;
+	text-align: right;
+	color: #dadada;
+}
+
+.CToolTip {
+	position: absolute;
+	visibility: hidden;
+	left: 0;
+	top: 0;
+	background: #444;
+	padding: 10px;
+	color: #fff;
+}
+
+/*custom*/
+
+div#littlefoot {
+	text-align: right;
+	color: #c1c1d5;
+	padding: 0 30px;
+}
+
+a.toTop {
+	float: right;
+	font-size: 9px;
+	color: #fff;
+	margin-top: 4px;
+	text-transform: lowercase;
+	text-shadow: none;
+}
+
+/* @group geshi */
+
+.kw1 {
+	color: #1b609a;
+}
+
+.kw2 {
+	color: #9a6f1b;
+}
+
+.me1 {
+	color: #666;
+}
+
+.kw3, .re0, .sc1 {
+	color: #784e0c;
+}
+
+.br0 {
+	color: #444;
+}
+
+.st0 {
+	color: #489a1b;
+}
+
+.co1, .coMULTI {
+	color: #888;
+}
+
+.nu0 {
+	color: #70483d;
+}
+
+/* @end */

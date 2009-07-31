@@ -1,0 +1,1106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Iván Montes" />
+    <meta name="description" content="DrTal - a TAL implementation in PHP" />
+    <meta name="copyright" content="Copyright 2008 Iván Montes" />
+    <title>
+      - DrTal docs
+    </title>
+    <link rel="stylesheet" type="text/css" media="screen" href="../_resources/styles/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="../_resources/styles/drtal.css" />
+<script type="text/javascript" src="../_resources/scripts/mootools.v1.11.js">
+</script>
+<script type="text/javascript" src="../_resources/scripts/docs.js">
+</script>
+  </head>
+  <body>
+    <div id="header">
+      <div id="header-inside">
+        <div id="logo">
+          <h1>
+            <a href="/"><span>DrTal - a TAL implementation in PHP</span></a>
+          </h1>
+        </div>
+        <p id="sponsor">
+          <span>sponsored by</span> <a href="http://netxus.es"><span>Netxus</span></a>
+        </p>
+        <ul id="menu">
+          <li>
+            <a href="http://pollinimini.net">home</a>
+          </li>
+          <li>
+            <a class="selected" href="../DrTal-php.html">docs</a>
+          </li>
+          <li>
+            <a href="http://blog.netxus.es">blog</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div id="Menu">
+      <div class="MEntry">
+        <div class="MFile">
+          <a href="../DrTal-php.html">DrTal</a>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Template</a>
+          <div class="MGroupContent" id="MGroupContent1">
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Context-php.html">Context</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Template-php.html">Template</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Template/Xml-php.html">Template_Xml</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Template/Xhtml-php.html">Template_Xhtml</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Template/HtmlTidy-php.html">Template_HtmlTidy</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Parser</a>
+          <div class="MGroupContent" id="MGroupContent2">
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Parser-php.html">Parser</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Parser/Namespace-php.html">Namespace</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Storage</a>
+          <div class="MGroupContent" id="MGroupContent3">
+            <div class="MEntry">
+              <div class="MFile" id="MSelected">
+                Storage
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Storage/File-php.html">Storage/ File</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Storage/String-php.html">Storage/ String</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Other</a>
+          <div class="MGroupContent" id="MGroupContent4">
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="../PHPTAL-php.html">PHPTAL</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Parser/Util/StringStream-php.html">setVariable</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Parser/Attribute-php.html">tales</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MFile">
+          <a href="../Documentation-txt.html">TAL Overview</a>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Index</a>
+          <div class="MGroupContent" id="MGroupContent5">
+            <div class="MEntry">
+              <div class="MIndex">
+                <a href="../_glossary/General.html">Everything</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MIndex">
+                <a href="../_glossary/Classes.html">Classes</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MIndex">
+                <a href="../_glossary/Files.html">Files</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MIndex">
+                <a href="../_glossary/Functions.html">Functions</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="Index">
+      <div class="CClass">
+        <div class="CTopic">
+          <h2 class="CTitle">
+            <a name="DrTal_Storage" id="DrTal_Storage"> </a>DrTal_Storage
+          </h2>
+          <div class="CBody">
+            <p class="CParagraph">
+              Abstract class defining the basic methods for a storage adapter
+            </p>
+            <h4 class="CHeading">
+              See also
+            </h4>
+            <p class="CParagraph">
+              <a href="Storage/File-php.html#DrTal_Storage_File" class="LClass" id="link23" title="Default storage adapter which works with physical files" name="link23">DrTal_Storage_File</a>,
+              <a href="Storage/String-php.html#DrTal_Storage_String" class="LClass" id="link24" title="Storage adapter for strings. " name="link24">DrTal_Storage_String</a>
+            </p>
+            <div class="Summary">
+              <div class="STitle">
+                Summary
+              </div>
+              <div class="SBorder">
+                <table border="0" cellspacing="0" cellpadding="0" class="STable">
+                  <tr>
+                    <td class="SEntrySize">
+                      <div class="SGroup">
+                        <div class="SEntry">
+                          <a href="#DrTal_Storage.Functions">Functions</a>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="SDescriptionSize">
+                      <div class="SGroup">
+                        <div class="SDescription">
+                           
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Storage.__construct" id="link12" title="public function __construct($options =  array(),$repositories =  array())Class constructor" name=
+                            "link12">__construct</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Class constructor
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Storage.setOption" id="link13" title="public function setOption($name,$value)Sets an adapter option" name="link13">setOption</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Sets an adapter option
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Storage.getOption" id="link14" title="public function getOption($name)Gets an adapter option" name="link14">getOption</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Gets an adapter option
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Storage.setRepositories" id="link15" title="public function setRepositories($path)Sets the adapter repositories" name="link15">setRepositories</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Sets the adapter repositories
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Storage.addRepositories" id="link16" title="public function addRepositories($path)Adds new repositories" name="link16">addRepositories</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Adds new repositories
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Storage.getRepositories" id="link17" title="public function getRepositories()Returns the current repositories for this adapter" name=
+                            "link17">getRepositories</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Returns the current repositories for this adapter
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Storage.find" id="link18" title="abstract public function find($tplName,$tplClass)Locates a template and instantiates a template object associated with it"
+                            name="link18">find</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Locates a template and instantiates a template object associated with it
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Storage.load" id="link19" title="abstract public function load($tplName)Loads the template contents" name="link19">load</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Loads the template contents
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Storage.isCurrent" id="link20" title="abstract public function isCurrent($tplName)Checks if the compiled template is still valid" name=
+                            "link20">isCurrent</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Checks if the compiled template is still valid
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Storage.getScriptStream" id="link21" title="abstract public function getScriptStream($tplName)Gets the compiled template stream path" name=
+                            "link21">getScriptStream</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Gets the compiled template stream path
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Storage.getScriptIdent" id="link22" title="abstract public function getScriptIdent($tplName)Gets the compiled template unique identifier" name=
+                            "link22">getScriptIdent</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Gets the compiled template unique identifier
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="CGroup">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Storage.Functions" id="DrTal_Storage.Functions"> </a>Functions
+          </h3>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Storage.__construct" id="DrTal_Storage.__construct"> </a>__construct
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function __construct(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $options
+                        </td>
+                        <td class="PDefaultValuePrefix">
+                           = 
+                        </td>
+                        <td class="PDefaultValue" width="100%">
+                          array(),
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $repositories
+                        </td>
+                        <td class="PDefaultValuePrefix">
+                           = 
+                        </td>
+                        <td class="PDefaultValue" width="100%">
+                          array()
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Class constructor
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry Optional">
+                  $options
+                </td>
+                <td class="CDLDescription">
+                  adapter options
+                </td>
+              </tr>
+              <tr>
+                <td class="CDLEntry Optional">
+                  $repositories
+                </td>
+                <td class="CDLDescription">
+                  template repositories
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Storage.setOption" id="DrTal_Storage.setOption"> </a>setOption
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function setOption(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $name,
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $value
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Sets an adapter option
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $name
+                </td>
+                <td class="CDLDescription">
+                  option to set
+                </td>
+              </tr>
+              <tr>
+                <td class="CDLEntry">
+                  $value
+                </td>
+                <td class="CDLDescription">
+                  new option value
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Storage.getOption" id="DrTal_Storage.getOption"> </a>getOption
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function getOption(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $name
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Gets an adapter option
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $name
+                </td>
+                <td class="CDLDescription">
+                  option to get
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              Option value
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Storage.setRepositories" id="DrTal_Storage.setRepositories"> </a>setRepositories
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function setRepositories(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $path
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Sets the adapter repositories
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $path
+                </td>
+                <td class="CDLDescription">
+                  An array with the new repositories (a string is also accepted)
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Storage.addRepositories" id="DrTal_Storage.addRepositories"> </a>addRepositories
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function addRepositories(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $path
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Adds new repositories
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $path
+                </td>
+                <td class="CDLDescription">
+                  An array with the new repositories (a string is also accepted)
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Storage.getRepositories" id="DrTal_Storage.getRepositories"> </a>getRepositories
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    public function getRepositories()
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Returns the current repositories for this adapter
+            </p>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              the current repositories
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Storage.find" id="DrTal_Storage.find"> </a>find
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          abstract public function find(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $tplName,
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $tplClass
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Locates a template and instantiates a template object associated with it
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $tplName
+                </td>
+                <td class="CDLDescription">
+                  The template filename or uri to locate
+                </td>
+              </tr>
+              <tr>
+                <td class="CDLEntry">
+                  $tplClass
+                </td>
+                <td class="CDLDescription">
+                  The <a href="Template-php.html#DrTal_Template" class="LClass" id="link25" title="Abstract class defining the basic methods for a template" name="link25">DrTal_Template</a> class
+                  name to instantiate
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              A <a href="Template-php.html#DrTal_Template" class="LClass" id="link26" title="Abstract class defining the basic methods for a template" name="link26">DrTal_Template</a> object if
+              successful, false if not
+            </p>
+            <h4 class="CHeading">
+              Throws
+            </h4>
+            <p class="CParagraph">
+              &lt;DrTal_Storage_Exception&gt; if an unexpected error was found
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Storage.load" id="DrTal_Storage.load"> </a>load
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          abstract public function load(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $tplName
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Loads the template contents
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $tplName
+                </td>
+                <td class="CDLDescription">
+                  the template filename or uri to load
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Return
+            </h4>
+            <p class="CParagraph">
+              the template contents
+            </p>
+            <h4 class="CHeading">
+              Throws
+            </h4>
+            <p class="CParagraph">
+              &lt;DrTal_Storage_Exception&gt; if an unexpected error was found
+            </p>
+            <h4 class="CHeading">
+              Notes
+            </h4>
+            <p class="CParagraph">
+              this function must be used after a succesfull call to <a href="#DrTal_Storage.find" class="LFunction" id="link27" title=
+              "abstract public function find($tplName,$tplClass)Locates a template and instantiates a template object associated with it" name="link27">find</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Storage.isCurrent" id="DrTal_Storage.isCurrent"> </a>isCurrent
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          abstract public function isCurrent(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $tplName
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Checks if the compiled template is still valid
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $tplName
+                </td>
+                <td class="CDLDescription">
+                  the template filename or uri to check
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Return
+            </h4>
+            <p class="CParagraph">
+              true if the compiled template is current, false if not
+            </p>
+            <h4 class="CHeading">
+              Throws
+            </h4>
+            <p class="CParagraph">
+              &lt;DrTal_Storage_Exception&gt; if an unexpected error was found
+            </p>
+            <h4 class="CHeading">
+              Notes
+            </h4>
+            <p class="CParagraph">
+              this function must be used after a succesfull call to <a href="#DrTal_Storage.find" class="LFunction" id="link28" title=
+              "abstract public function find($tplName,$tplClass)Locates a template and instantiates a template object associated with it" name="link28">find</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Storage.getScriptStream" id="DrTal_Storage.getScriptStream"> </a>getScriptStream
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          abstract public function getScriptStream(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $tplName
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Gets the compiled template stream path
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $tplName
+                </td>
+                <td class="CDLDescription">
+                  the template filename or uri to load
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Return
+            </h4>
+            <p class="CParagraph">
+              the compiled template stream path
+            </p>
+            <h4 class="CHeading">
+              Throws
+            </h4>
+            <p class="CParagraph">
+              &lt;DrTal_Storage_Exception&gt; if an unexpected error was found
+            </p>
+            <h4 class="CHeading">
+              Notes
+            </h4>
+            <p class="CParagraph">
+              this function must be used after a succesfull call to <a href="#DrTal_Storage.find" class="LFunction" id="link29" title=
+              "abstract public function find($tplName,$tplClass)Locates a template and instantiates a template object associated with it" name="link29">find</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Storage.getScriptIdent" id="DrTal_Storage.getScriptIdent"> </a>getScriptIdent
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          abstract public function getScriptIdent(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $tplName
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Gets the compiled template unique identifier
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $tplName
+                </td>
+                <td class="CDLDescription">
+                  the template filename or uri to load
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Return
+            </h4>
+            <p class="CParagraph">
+              the compiled template identifier
+            </p>
+            <h4 class="CHeading">
+              Throws
+            </h4>
+            <p class="CParagraph">
+              &lt;DrTal_Storage_Exception&gt; if an unexpected error was found
+            </p>
+            <h4 class="CHeading">
+              Notes
+            </h4>
+            <p class="CParagraph">
+              this function must be used after a succesfull call to <a href="#DrTal_Storage.find" class="LFunction" id="link30" title=
+              "abstract public function find($tplName,$tplClass)Locates a template and instantiates a template object associated with it" name="link30">find</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="littlefoot">
+      <p>
+        Documentation by <a href="http://pollinimini.net">Iván Montes</a>, generated by <a href="http://naturaldocs.org">NaturalDocs</a> and <a href="http://php.net/dom">libxml2</a> and <a href=
+        "http://php.net/tidy">Tidy</a> and <a href="http://qbnz.com/highlighter/">GeSHi</a>. Layout based on <a href="http://docs.mootools.net">mootools docs</a>
+      </p>
+    </div>
+    <div id="footer">
+      <div id="footer-inside">
+        <a class="copy" href="http://blog.netxus.es"></a>
+        <p>
+          copyright © 2008 <a href="http://blog.netxus.es">Iván Montes</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

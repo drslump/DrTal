@@ -1,0 +1,899 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="author" content="Iván Montes" />
+    <meta name="description" content="DrTal - a TAL implementation in PHP" />
+    <meta name="copyright" content="Copyright 2008 Iván Montes" />
+    <title>
+      - DrTal docs
+    </title>
+    <link rel="stylesheet" type="text/css" media="screen" href="../_resources/styles/style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="../_resources/styles/drtal.css" />
+<script type="text/javascript" src="../_resources/scripts/mootools.v1.11.js">
+</script>
+<script type="text/javascript" src="../_resources/scripts/docs.js">
+</script>
+  </head>
+  <body>
+    <div id="header">
+      <div id="header-inside">
+        <div id="logo">
+          <h1>
+            <a href="/"><span>DrTal - a TAL implementation in PHP</span></a>
+          </h1>
+        </div>
+        <p id="sponsor">
+          <span>sponsored by</span> <a href="http://netxus.es"><span>Netxus</span></a>
+        </p>
+        <ul id="menu">
+          <li>
+            <a href="http://pollinimini.net">home</a>
+          </li>
+          <li>
+            <a class="selected" href="../DrTal-php.html">docs</a>
+          </li>
+          <li>
+            <a href="http://blog.netxus.es">blog</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div id="Menu">
+      <div class="MEntry">
+        <div class="MFile">
+          <a href="../DrTal-php.html">DrTal</a>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Template</a>
+          <div class="MGroupContent" id="MGroupContent1">
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Context-php.html">Context</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile" id="MSelected">
+                Template
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Template/Xml-php.html">Template_Xml</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Template/Xhtml-php.html">Template_Xhtml</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Template/HtmlTidy-php.html">Template_HtmlTidy</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Parser</a>
+          <div class="MGroupContent" id="MGroupContent2">
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Parser-php.html">Parser</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Parser/Namespace-php.html">Namespace</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Storage</a>
+          <div class="MGroupContent" id="MGroupContent3">
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Storage-php.html">Storage</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Storage/File-php.html">Storage/ File</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Storage/String-php.html">Storage/ String</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Other</a>
+          <div class="MGroupContent" id="MGroupContent4">
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="../PHPTAL-php.html">PHPTAL</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Parser/Util/StringStream-php.html">setVariable</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MFile">
+                <a href="Parser/Attribute-php.html">tales</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MFile">
+          <a href="../Documentation-txt.html">TAL Overview</a>
+        </div>
+      </div>
+      <div class="MEntry">
+        <div class="MGroup">
+          <a>Index</a>
+          <div class="MGroupContent" id="MGroupContent5">
+            <div class="MEntry">
+              <div class="MIndex">
+                <a href="../_glossary/General.html">Everything</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MIndex">
+                <a href="../_glossary/Classes.html">Classes</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MIndex">
+                <a href="../_glossary/Files.html">Files</a>
+              </div>
+            </div>
+            <div class="MEntry">
+              <div class="MIndex">
+                <a href="../_glossary/Functions.html">Functions</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="Index">
+      <div class="CClass">
+        <div class="CTopic">
+          <h2 class="CTitle">
+            <a name="DrTal_Template" id="DrTal_Template"> </a>DrTal_Template
+          </h2>
+          <div class="CBody">
+            <p class="CParagraph">
+              Abstract class defining the basic methods for a template
+            </p>
+            <h4 class="CHeading">
+              See also
+            </h4>
+            <p class="CParagraph">
+              <a href="Template/Xml-php.html#DrTal_Template_Xml" class="LClass" id="link21" title="A simple template handler for valid XML templates" name="link21">DrTal_Template_Xml</a>, <a href=
+              "Template/Xhtml-php.html#DrTal_Template_Xhtml" class="LClass" id="link22" title="Default template handler suited to parse valid XHTML templates." name="link22">DrTal_Template_Xhtml</a>,
+              <a href="Template/HtmlTidy-php.html#DrTal_Template_HtmlTidy" class="LClass" id="link23" title="Template handler for non xml compliant HTML templates." name=
+              "link23">DrTal_Template_HtmlTidy</a> and <a href="Context-php.html#DrTal_Context" class="LClass" id="link24" title=
+              "Default context handling class which stores the variables for the associated template and offers helper functions like a path resolver or escaping functions." name=
+              "link24">DrTal_Context</a>
+            </p>
+            <div class="Summary">
+              <div class="STitle">
+                Summary
+              </div>
+              <div class="SBorder">
+                <table border="0" cellspacing="0" cellpadding="0" class="STable">
+                  <tr>
+                    <td class="SEntrySize">
+                      <div class="SGroup">
+                        <div class="SEntry">
+                          <a href="#DrTal_Template.Functions">Functions</a>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="SDescriptionSize">
+                      <div class="SGroup">
+                        <div class="SDescription">
+                           
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Template.__construct" id="link11" title=
+                            "public function __construct(DrTal_Storage $finder, $tplName)Class constructor to initialize the relationship with an storage" name="link11">__construct</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Class constructor to initialize the relationship with an storage
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Template.getSource" id="link12" title="public function getSource()Returns a string with the contents of the template. " name="link12">getSource</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Returns a string with the contents of the template.
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Template.getScriptStream" id="link13" title="public function getScriptStream()Returns the compiled template stream path" name="link13">getScriptStream</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Returns the compiled template stream path
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Template.getScriptIdent" id="link14" title="public function getScriptIdent()Returns the compiled template unique identifier" name=
+                            "link14">getScriptIdent</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Returns the compiled template unique identifier
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Template.initParser" id="link15" title="protected function initParser()Private method to setup the parser." name="link15">initParser</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Private method to setup the parser.
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Template.getParser" id="link16" title=
+                            "public function getParser()Returns the parser object associated with this template, initializing it if not yet created." name="link16">getParser</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Returns the parser object associated with this template, initializing it if not yet created.
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Template.prepare" id="link17" title="protected function prepare( )Private method to include the compiled template (compiling it if it’s not yet compiled)"
+                            name="link17">prepare</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Private method to include the compiled template (compiling it if it’s not yet compiled)
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Template.execute" id="link18" title="public function execute($display =  true)Runs the template returning the contents or sending the result to stdout"
+                            name="link18">execute</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Runs the template returning the contents or sending the result to stdout
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr class="SMarked">
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Template.__get" id="link19" title="public function __get($name)Magic getter which gets a variable from the template context" name="link19">__get</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Magic getter which gets a variable from the template context
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SEntry">
+                          <div class="SIndent1">
+                            <a href="#DrTal_Template.__set" id="link20" title="public function __set($name,$value)Magic setter which sets a variable in the template context" name="link20">__set</a>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>
+                      <div class="SFunction">
+                        <div class="SDescription">
+                          <div class="SIndent1">
+                            Magic setter which sets a variable in the template context
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="CGroup">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Template.Functions" id="DrTal_Template.Functions"> </a>Functions
+          </h3>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Template.__construct" id="DrTal_Template.__construct"> </a>__construct
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function __construct(
+                        </td>
+                        <td class="PType" nowrap="nowrap">
+                          DrTal_Storage 
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $finder,
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td class="PType" nowrap="nowrap">
+                           
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $tplName
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Class constructor to initialize the relationship with an storage
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $storage
+                </td>
+                <td class="CDLDescription">
+                  A <a href="Storage-php.html#DrTal_Storage" class="LClass" id="link25" title="Abstract class defining the basic methods for a storage adapter" name="link25">DrTal_Storage</a> related
+                  to this template
+                </td>
+              </tr>
+              <tr>
+                <td class="CDLEntry">
+                  $tplName
+                </td>
+                <td class="CDLDescription">
+                  The template name as understood by the given storage
+                </td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Template.getSource" id="DrTal_Template.getSource"> </a>getSource
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    public function getSource()
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Returns a string with the contents of the template.  This method is only used when the templated needs to be compiled.
+            </p>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              A string with the template source
+            </p>
+            <h4 class="CHeading">
+              Note
+            </h4>
+            <p class="CParagraph">
+              Extend this method to include your pre-parsing filters
+            </p>
+            <h4 class="CHeading">
+              See also
+            </h4>
+            <p class="CParagraph">
+              <a href="Storage-php.html#DrTal_Storage.load" class="LFunction" id="link26" title="abstract public function load($tplName)Loads the template contents" name=
+              "link26">DrTal_Storage-&gt;load</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Template.getScriptStream" id="DrTal_Template.getScriptStream"> </a>getScriptStream
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    public function getScriptStream()
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Returns the compiled template stream path
+            </p>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              the compiled template stream path
+            </p>
+            <h4 class="CHeading">
+              See also
+            </h4>
+            <p class="CParagraph">
+              <a href="Storage-php.html#DrTal_Storage.getScriptStream" class="LFunction" id="link27" title="abstract public function getScriptStream($tplName)Gets the compiled template stream path"
+              name="link27">DrTal_Storage-&gt;getScriptStream</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Template.getScriptIdent" id="DrTal_Template.getScriptIdent"> </a>getScriptIdent
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    public function getScriptIdent()
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Returns the compiled template unique identifier
+            </p>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              the compiled template unique identifier
+            </p>
+            <h4 class="CHeading">
+              See also
+            </h4>
+            <p class="CParagraph">
+              <a href="Storage-php.html#DrTal_Storage.getScriptIdent" class="LFunction" id="link28" title=
+              "abstract public function getScriptIdent($tplName)Gets the compiled template unique identifier" name="link28">DrTal_Storage-&gt;getScriptIdent</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Template.initParser" id="DrTal_Template.initParser"> </a>initParser
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    protected function initParser()
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Private method to setup the parser.
+            </p>
+            <h4 class="CHeading">
+              Note
+            </h4>
+            <p class="CParagraph">
+              Extend this method if your need to configure the parser for your needs.
+            </p>
+            <blockquote>
+              <pre class="php">
+protected <span style="color: #000000; font-weight: bold;">function</span> initParser<span style="color: #66cc66;">(</span><span style="color: #66cc66;">)</span> <span style=
+"color: #66cc66;">{</span>
+    parent::<span style="color: #006600;">initParser</span><span style="color: #66cc66;">(</span><span style="color: #66cc66;">)</span>;
+    <span style="color: #0000ff;">$this</span>-&gt;<span style="color: #006600;">parser</span>-&gt;<span style="color: #006600;">registerNamespace</span><span style=
+"color: #66cc66;">(</span> <span style="color: #000000; font-weight: bold;">new</span> MyCustomNamespace<span style="color: #66cc66;">(</span><span style="color: #66cc66;">)</span> <span style=
+"color: #66cc66;">)</span>;
+    <span style="color: #0000ff;">$this</span>-&gt;<span style="color: #006600;">parser</span>-&gt;<span style="color: #006600;">registerEntity</span><span style=
+"color: #66cc66;">(</span> <span style="color: #ff0000;">'version'</span>, DrTal::<span style="color: #006600;">VERSION_SIGNATURE</span> <span style="color: #66cc66;">)</span>;
+<span style="color: #66cc66;">}</span>
+</pre>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Template.getParser" id="DrTal_Template.getParser"> </a>getParser
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    public function getParser()
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Returns the parser object associated with this template, initializing it if not yet created.
+            </p>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              The <a href="Parser-php.html#DrTal_Parser" class="LClass" id="link29" title=
+              "This class takes care of parsing a template and calling the registered hooks which generate the final compiled template." name="link29">DrTal_Parser</a> object
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Template.prepare" id="DrTal_Template.prepare"> </a>prepare
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    protected function prepare( )
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Private method to include the compiled template (compiling it if it’s not yet compiled)
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Template.execute" id="DrTal_Template.execute"> </a>execute
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function execute(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $display
+                        </td>
+                        <td class="PDefaultValuePrefix">
+                           = 
+                        </td>
+                        <td class="PDefaultValue" width="100%">
+                          true
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Runs the template returning the contents or sending the result to stdout
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry Optional">
+                  $display
+                </td>
+                <td class="CDLDescription">
+                  If false the result of the template execution is returned by the function.  If true the result is sent directly to the browser.
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              False if $display is true or the template contents if it’s false.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Template.__get" id="DrTal_Template.__get"> </a>__get
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function __get(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $name
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Magic getter which gets a variable from the template context
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $name
+                </td>
+                <td class="CDLDescription">
+                  The name of the variable to fetch
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              Returns
+            </h4>
+            <p class="CParagraph">
+              The variable contents
+            </p>
+            <h4 class="CHeading">
+              See also
+            </h4>
+            <p class="CParagraph">
+              <a href="Context-php.html#DrTal_Context.get" class="LFunction" id="link30" title="public function get($name)Gets a variable from the context" name="link30">DrTal_Context-&gt;get</a>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="CFunction">
+        <div class="CTopic">
+          <h3 class="CTitle">
+            <a name="DrTal_Template.__set" id="DrTal_Template.__set"> </a>__set
+          </h3>
+          <div class="CBody">
+            <blockquote>
+              <table border="0" cellspacing="0" cellpadding="0" class="Prototype">
+                <tr>
+                  <td>
+                    <table border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td class="PBeforeParameters" nowrap="nowrap">
+                          public function __set(
+                        </td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $name,
+                        </td>
+                      </tr>
+                      <tr>
+                        <td></td>
+                        <td class="PParameter" nowrap="nowrap">
+                          $value
+                        </td>
+                        <td class="PAfterParameters" nowrap="nowrap">
+                          )
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </blockquote>
+            <p class="CParagraph">
+              Magic setter which sets a variable in the template context
+            </p>
+            <h4 class="CHeading">
+              Arguments
+            </h4>
+            <table border="0" cellspacing="0" cellpadding="0" class="CDescriptionList">
+              <tr>
+                <td class="CDLEntry">
+                  $name
+                </td>
+                <td class="CDLDescription">
+                  The name of the variable to set
+                </td>
+              </tr>
+              <tr>
+                <td class="CDLEntry">
+                  $value
+                </td>
+                <td class="CDLDescription">
+                  The value to be assigned to the variable
+                </td>
+              </tr>
+            </table>
+            <h4 class="CHeading">
+              See also
+            </h4>
+            <p class="CParagraph">
+              <a href="Context-php.html#DrTal_Context.set" class="LFunction" id="link31" title="public function set($name,$value)Sets a variable in the context" name=
+              "link31">DrTal_Context-&gt;set</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="littlefoot">
+      <p>
+        Documentation by <a href="http://pollinimini.net">Iván Montes</a>, generated by <a href="http://naturaldocs.org">NaturalDocs</a> and <a href="http://php.net/dom">libxml2</a> and <a href=
+        "http://php.net/tidy">Tidy</a> and <a href="http://qbnz.com/highlighter/">GeSHi</a>. Layout based on <a href="http://docs.mootools.net">mootools docs</a>
+      </p>
+    </div>
+    <div id="footer">
+      <div id="footer-inside">
+        <a class="copy" href="http://blog.netxus.es"></a>
+        <p>
+          copyright © 2008 <a href="http://blog.netxus.es">Iván Montes</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
