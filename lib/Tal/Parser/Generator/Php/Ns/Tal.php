@@ -34,7 +34,7 @@ class Tal extends Base\Ns {
         $this->registerAttribute( 'omit-tag', $ns . 'OmitTagAttribute', \DrSlump\Tal::PRIORITY_VERYLOW );
     }
     
-    public function getNamespaceUrl()
+    public function getNamespaceUri()
     {
         return 'http://xml.zope.org/namespaces/tal';
     }

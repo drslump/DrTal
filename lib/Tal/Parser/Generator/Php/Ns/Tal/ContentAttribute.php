@@ -5,10 +5,10 @@ namespace DrSlump\Tal\Parser\Generator\Php\Ns\Tal;
 use DrSlump\Tal\Parser\Generator\Base;
 use DrSlump\Tal\Parser;
 
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Attribute.php';
+require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Ns/Attribute.php';
 
 
-class ContentAttribute extends Base\Attribute
+class ContentAttribute extends Base\Ns\Attribute
 {
     public function beforeElement()
     {
@@ -19,7 +19,7 @@ class ContentAttribute extends Base\Attribute
     public function beforeContent()
     {
         // Start capturing the element's content if any
-        $this->getCodegen()
+        $this->getWriter()
         ->closePhp()  // make sure PHP mode is closed
         ->capture();
     }
@@ -27,10 +27,10 @@ class ContentAttribute extends Base\Attribute
     public function afterContent()
     {
         // Store the element's contents
-        $default = $this->getCodegen()->getCapture(true);
+        $default = $this->getWriter()->getCapture(true);
         
         // Stop capturing since we already have the contents
-        $this->getCodegen()
+        $this->getWriter()
         ->endCapture();
         
         
@@ -48,7 +48,7 @@ class ContentAttribute extends Base\Attribute
         $value = trim( $this->doAlternates( $value,  '$_tal_content', $default ) );
         
         // Finally echo the value
-        $this->getCodegen()
+        $this->getWriter()
             ->php( $echoFunc . '($_tal_content);' );        
     }
 }

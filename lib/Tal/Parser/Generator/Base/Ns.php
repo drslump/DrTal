@@ -41,7 +41,7 @@ use DrSlump\Tal;
     Abstract class defining a namespace
 
  See also:
-    <Tal::Parser::Generator::Base::Element>, <Tal::Parser::Generator::Base::Attribute>
+    <Tal::Parser::Generator::Abstract::Ns::Element>, <Tal::Parser::Generator::Abstract::Ns::Attribute>
 */
 
 abstract class Ns {
@@ -53,30 +53,30 @@ abstract class Ns {
     
     public function hasElement( $element )
     {
-        return isset( $this->elements[$element] ) || isset( $this->elements[DrTal::ANY_ELEMENT] );
+        return isset( $this->elements[$element] ) || isset( $this->elements[Tal::ANY_ELEMENT] );
     }
     
     public function getElement( $element )
     {
         if ( isset($this->elements[$element]) )
             return $this->elements[$element];
-        else if ( isset($this->elements[DrTal::ANY_ELEMENT]) ) 
-            return $this->elements[DrTal::ANY_ELEMENT];
+        else if ( isset($this->elements[Tal::ANY_ELEMENT]) ) 
+            return $this->elements[Tal::ANY_ELEMENT];
         else
             return null;
     }
     
     public function hasAttribute( $attribute )
     {
-        return isset( $this->attributes[$attribute] ) || isset( $this->attributes[DrTal::ANY_ATTRIBUTE] );
+        return isset( $this->attributes[$attribute] ) || isset( $this->attributes[Tal::ANY_ATTRIBUTE] );
     }
     
     public function getAttribute( $attribute )
     {
         if ( isset($this->attributes[$attribute]) )
             return $this->attributes[$attribute];
-        else if ( isset($this->attributes[DrTal::ANY_ATTRIBUTE]) )
-            return $this->attributes[DrTal::ANY_ATTRIBUTE];
+        else if ( isset($this->attributes[Tal::ANY_ATTRIBUTE]) )
+            return $this->attributes[Tal::ANY_ATTRIBUTE];
         else
             return null;
     }
@@ -91,7 +91,8 @@ abstract class Ns {
     
     public function getNamespaceUri()
     {
-        return 'drtal://namespace.uri/' . strtolower(get_class($this));
+        $class = str_replace('\\', '/', get_class($this));
+        return 'drtal://namespace.uri/' . strtolower($class);
     }
     
     public function getNamespacePrefix()

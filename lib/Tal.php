@@ -93,8 +93,8 @@ class Tal
     const PRIORITY_MINIMUM          = 1;
 
 
-    protected $templateClass = 'DrSlump\\Tal\\Template\\Xhtml';
-    protected $storages = array();
+    protected $_defaultTemplateClass = 'DrSlump\\Tal\\Template\\Xhtml';
+    protected $_storages = array();
 
     /*
      Method: __construct
@@ -103,6 +103,7 @@ class Tal
     */
     private function __construct()
     {
+        // Initialize the file storage by default
         $storage = new Storage\File( array(
             'path-prefix'   => 'DrTal_',
             'file-prefix'   => 'DrTal_' . self::VERSION_SIGNATURE,
@@ -118,7 +119,7 @@ class Tal
         static class singleton getter
 
      Returns:
-        the <DrTal> singleton instance
+        the <Tal> singleton instance
     */
     static public function getInstance()
     {
@@ -138,7 +139,6 @@ class Tal
      Arguments:
         $enabled    - If set to false it will disable the debug mode, if true it's
                         enabled. If not set it will return the current debug mode.
-            
             
      Returns:
         the current debugging mode
@@ -161,12 +161,12 @@ class Tal
 
      Returns:
         An associative array with the registered storages with the name as key
-        and the <DrTal::Storage> as value
+        and the <Tal::Storage> as value
     */
     public function getStorages()
     {
         $storages = array();
-        foreach ( $this->storages as $name => $storage )
+        foreach ( $this->_storages as $name => $storage )
         {
             $storages[$name] = $storage['object'];
         }
@@ -182,12 +182,12 @@ class Tal
         $name   - the storage name to get
 
      Returns:
-        if found a <DrTal::Storage> object, if not false
+        if found a <Tal::Storage> object, if not false
     */
     public function getStorage( $name )
     {
-        if ( isset($this->storages[$name]) ) {
-            return $this->storages[$name]['object'];
+        if ( isset($this->_storages[$name]) ) {
+            return $this->_storages[$name]['object'];
         }
         
         return false;
@@ -200,15 +200,15 @@ class Tal
 
      Arguments:
         $name   - The choosen name for the storage
-        $obj    - The <DrTal::Storage> object to register
-        $prio   - The priority of this storage (see <DrTal> priority constants)
+        $obj    - The <Tal::Storage> object to register
+        $prio   - The priority of this storage (see <Tal> priority constants)
 
      Returns:
         always true
     */
     public function registerStorage( $name, Tal\Storage $obj, $prio = self::PRIORITY_MEDIUM )
     {
-        $this->storages[$name] = array(
+        $this->_storages[$name] = array(
             'object'    => $obj,
             'priority'  => $prio,
         );
@@ -228,8 +228,8 @@ class Tal
     */
     public function unregisterStorage( $name )
     {
-        if ( isset($this->storages[$name]) ) {
-            unset($this->storages[$name]);
+        if ( isset($this->_storages[$name]) ) {
+            unset($this->_storages[$name]);
             return true;
         }
 
@@ -237,19 +237,33 @@ class Tal
     }
 
     /*
-     Method: setClass
-        Static method to inject a custom <DrTal::Template> class name to be used
+     Method: setTemplateClass
+        Static method to inject a custom <Tal::Template> class name to be used
         when instantiating a template.
 
      Arguments:
-        $tplClass   - The <DrTal::Template> descendant class to use
+        $tplClass   - The <Tal::Template> descendant class to use
     */
-    static public function setClass( $tplClass )
+    static public function setTemplateClass( $tplClass )
     {
         $self = self::getInstance();
-        $self->templateClass = $tplClass;
+        $self->_defaultTemplateClass = $tplClass;
     }
 
+    /*
+     Method: getTemplateClass
+        Static method to get the current default <Tal::Template> class name to
+        be used when instantiating a template.
+
+     Returns:
+        The <Tal::Template> descendant class to use
+    */
+    static public function getTemplateClass()
+    {
+        $self = self::getInstance();
+        return $self->_defaultTemplateClass;
+    }
+    
     /*
      Method: load
         Static method to find a template source file using the given storage
@@ -257,35 +271,35 @@ class Tal
 
      Arguments:
         $tplFile    - the template filename or uri to get
-        $storage?   - a <DrTal::Storage> object to be queried for the template
+        $storage?   - a <Tal::Storage> object to be queried for the template
 
      Returns:
-        a <DrTal::Template> object repressenting the choosen template
+        a <Tal::Template> object repressenting the choosen template
 
      Throws:
-        <DrTal::Exception> if it was not possible to find the template
+        <Tal::Exception> if it was not possible to find the template
     */
     static public function load( $tplFile, $storage = null )
     {
         $self = self::getInstance();
 
-        if ($storage === null && empty($self->storages)) {
+        if ($storage === null && empty($self->_storages)) {
             throw new Tal\Exception( 'No storages are registered. Register at least one to be able to load a template' );
         }
 
         if ( is_string($storage) ) {
 
-            if ( !isset($self->storages[$storage]) ) {
+            if ( !isset($self->_storages[$storage]) ) {
                 throw new Tal\Exception( 'The supplied storage "' . $storage . '" is not registered' );
             }
 
-            $storage = $self->storages[$storage];
+            $storage = $self->_storages[$storage];
         }
 
         // Check using the supplied resolver object
         if ( $storage instanceof Storage ) {
 
-            $tplObj = $storage->find( $tplFile, $self->templateClass );
+            $tplObj = $storage->find( $tplFile, $self->_defaultTemplateClass );
 
         } else {
 
@@ -310,19 +324,20 @@ class Tal
      Arguments:
         $tplString  - A string with the template contents
         $storage?   - A <Tal::Storage> object used to work with the template. By default
-                        it will use <DrTal::Storage::String>
+                        it will use <Tal::Storage::String>
 
      Returns:
-        A <DrTal::Template> object
+        A <Tal::Template> object
 
      Throws:
-        <DrTal::Exception> if it was not possible to create the template
+        <Tal::Exception> if it was not possible to create the template
     */
     static public function string( $tplString, Storage $storage = null )
     {
+        // If no storage given then create a string based one
         if ( !$storage ) {
             include_once TAL_LIB_DIR . 'Tal/Storage/String.php';
-
+            
             $storage = new Storage\String( array(
                 'path-prefix'   => 'DrTal_',
                 'file-prefix'   => 'DrTal_' . self::VERSION_SIGNATURE,
@@ -349,7 +364,7 @@ class Tal
         (start code)
         array(
             array(
-                'priority' => DrTal::PRIORITY_MAXIMUM
+                'priority' => Tal::PRIORITY_MAXIMUM
                 ...
             ),
             ...

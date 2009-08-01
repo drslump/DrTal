@@ -5,13 +5,13 @@ namespace DrSlump\Tal\Parser\Generator\Php\Ns\Metal;
 use DrSlump\Tal\Parser\Generator\Base;
 use DrSlump\Tal\Parser;
 
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Attribute.php';
+require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Ns/Attribute.php';
 
-class DefineMacroAttribute extends Base\Attribute
+class DefineMacroAttribute extends Base\Ns\Attribute
 {
     public function beforeElement()
     {
-        $this->getCodegen()
+        $this->getWriter()
         ->debugTales( 'define-macro', $this->value )
         ->capture();
     }
@@ -25,31 +25,31 @@ class DefineMacroAttribute extends Base\Attribute
             throw new Parser\Exception( 'Macro names must be only composed of alpha-numeric characters (A-Z and 0-9)' );
         }
         
-        $this->getCodegen()
+        $this->getWriter()
         ->endCapture()
         ->capture()
             ->EOL(true)
             ->comment( 'Macro: ' . $this->value )->EOL()
-            ->php(  'function ' . $this->getCodegen()->getTemplate()->getScriptIdent() .
+            ->php(  'function ' . $this->getWriter()->getTemplate()->getScriptIdent() .
                     '_metal_macro_' . $value . '($ctx, $_metal_slots) {')->EOL();
     }
     
     public function afterContent()
     {
-        $this->getCodegen()
+        $this->getWriter()
             ->EOL()
             ->php('}')->EOL();
             
-        $this->getCodegen()->append( $this->getCodegen()->getCapture() );
+        $this->getWriter()->append( $this->getWriter()->getCapture() );
         
-        $this->getCodegen()
+        $this->getWriter()
         ->endCapture()
         ->capture();
     }
     
     public function afterElement()
     {
-        $this->getCodegen()
+        $this->getWriter()
         ->endCapture();
     }
 }

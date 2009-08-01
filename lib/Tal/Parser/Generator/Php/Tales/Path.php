@@ -1,9 +1,10 @@
 <?php
 
-namespace DrSlump\Tal\Parser\Generator\Php;
+namespace DrSlump\Tal\Parser\Generator\Php\Tales;
 
-use DrSlump\Tal\Parser\Generator;
+use DrSlump\Tal\Parser\Generator\Base;
 
+require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Tales.php';
 
 class Path extends Base\Tales
 {
@@ -30,8 +31,9 @@ class Path extends Base\Tales
         $this->_exp = $exp;
         
         if ( !empty($parts) ) {
-            return '$ctx->path(\'' . implode('/', $parts) . '\')';
+            $this->_value = '$ctx->path(\'' . implode('/', $parts) . '\')';
         } else {
-            return '';
+            $this->_value = '';
         }
     }
+}

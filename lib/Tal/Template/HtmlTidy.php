@@ -33,6 +33,8 @@
 
 namespace DrSlump\Tal\Template;
 
+use DrSlump\Tal;
+
 require_once TAL_LIB_DIR . 'Tal/Template/Xhtml.php';
 
 
@@ -55,41 +57,41 @@ class HtmlTidy extends Xhtml
     public function getSource()
     {
         if ( !class_exists('tidy') ) {
-            throw new Tal\Exception( 'Tidy extension not available. Unable to load a template using tidy' );
+            throw new Tal\Exception( 'Tidy extension not available. Unable to load a template using ' . get_class($this) );
         }
         
         // Register HTML entities
-        $parser = Tal::parser();
         foreach ( $this->entities as $name => $value ) {
-            $parser->registerEntity( ucfirst($name), "&#$value;" );
-            $parser->registerEntity( strtoupper($name), "&#$value;" );
+            $this->parser->registerEntity( ucfirst($name), "&#$value;" );
+            $this->parser->registerEntity( strtoupper($name), "&#$value;" );
         }        
            
-        // Loads the template and applys the Xhtml changes (Entities and enclosed <script>s)
+        // Loads the template and apply Xhtml changes (Entities and enclosed <script>s)
         $tpl = parent::getSource();
         
-        $tidy = new Tidy();
+        // Configure the tidy extension to clean up the template
+        $tidy = new \Tidy();
         $config = array(
-            'output-xhtml'            => true,
-            'add-xml-decl'          => false,
-            'add-xml-space'         => true,
-            'assume-xml-procins'    => true,
-            'doctype'               => 'omit',
-            'drop-empty-paras'      => false,
-            'drop-propietary-attributes'    => false,
-            'escape-cdata'          => false,
-            'fix-backspace'         => false,
-            'fix-uri'               => false,            
-            'join-classes'          => true,
-            'join-styles'           => true,
-            'literal-attributes'    => true,
-            //'lower-literals'        => true,
-            'merge-divs'            => false,
-            'merge-spans'           => false,
-            'preserve-entities'     => true,
-            'quote-ampersand'       => true,
-            'quote-nbsp'            => true,
-            'repeated-attributes'   => 'keep-last',
+            'output-xhtml'              => true,
+            'add-xml-decl'              => false,
+            'add-xml-space'             => true,
+            'assume-xml-procins'        => true,
+            'doctype'                   => 'omit',
+            'drop-empty-paras'          => false,
+            'drop-proprietary-attributes'=> false,
+            'escape-cdata'              => false,
+            'fix-backslash'             => false,
+            'fix-uri'                   => false,            
+            'join-classes'              => true,
+            'join-styles'               => true,
+            'literal-attributes'        => true,
+            //'lower-literals'            => true,
+            'merge-divs'                => false,
+            //'merge-spans'               => false, // No available in PHP's tidy?
+            // 'preserve-entities'         => true, // Not available in PHP's tidy?
+            'quote-ampersand'           => true,
+            'quote-nbsp'                => true,
+            'repeated-attributes'       => 'keep-last',
         );
         
         $tidy->parseString( $tpl, $config );

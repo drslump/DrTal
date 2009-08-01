@@ -1,8 +1,13 @@
 <?php
 
-namespace DrSlump\Tal\Parser\Generator\Php;
+namespace DrSlump\Tal\Parser\Generator\Php\Tales;
 
-class Path extends Base\Tales
+use DrSlump\Tal\Parser\Generator\Base;
+
+require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Tales.php';
+
+
+class String extends Base\Tales
 {
     
     public function evaluate()
@@ -77,6 +82,6 @@ class Path extends Base\Tales
             $parts[] = "'" . addcslashes($prev, '\'\\') . "'";
         }
         
-        return implode( ' . ', $parts );
+        $this->_value = implode( ' . ', $parts );
     }
 }

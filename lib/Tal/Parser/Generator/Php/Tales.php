@@ -4,7 +4,7 @@ namespace DrSlump\Tal\Parser\Generator\Php;
 
 class Tales {
     
-    static public function path( $codegen, &$exp, $isPrefix )
+    static public function path( $codegen, &$exp, &$isPrefix )
     {
         $parts = array();
         $exp = trim($exp);

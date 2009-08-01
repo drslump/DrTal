@@ -5,35 +5,35 @@ namespace DrSlump\Tal\Parser\Generator\Php\Ns\Tal;
 use DrSlump\Tal\Parser\Generator\Base;
 use DrSlump\Tal\Parser;
 
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Attribute.php';
+require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Ns/Attribute.php';
 
-class OmitTagAttribute extends Base\Attribute
+class OmitTagAttribute extends Base\Ns\Attribute
 {
     public function beforeElement()
     {
         if ( empty($this->value) ) {
-            $this->getCodegen()->capture();
+            $this->getWriter()->capture();
         }
     }
     
     public function beforeContent()
     {
         if ( empty($this->value) ) {
-            $this->getCodegen()->endCapture();
+            $this->getWriter()->endCapture();
         }
     }
     
     public function afterContent()
     {
         if ( empty($this->value) ) {
-            $this->getCodegen()->capture();
+            $this->getWriter()->capture();
         }        
     }
     
     public function afterElement()
     {
         if ( empty($this->value) ) {
-            $this->getCodegen()->endCapture();
+            $this->getWriter()->endCapture();
         }
     }
 }

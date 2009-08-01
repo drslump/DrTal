@@ -5,9 +5,13 @@ namespace DrSlump\Tal\Parser\Generator\Php\Ns\Tal;
 use DrSlump\Tal\Parser\Generator\Base;
 use DrSlump\Tal\Parser;
 
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Attribute.php';
+require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Ns/Attribute.php';
 
-class RepeatAttribute extends Base\Attribute
+/*
+    <li tal:repeat= item list ></li>
+ 
+ */
+class RepeatAttribute extends Base\Ns\Attribute
 {
     static protected $counter = 0;
     protected $repeatName;
@@ -15,18 +19,20 @@ class RepeatAttribute extends Base\Attribute
     
     public function beforeElement()
     {
-        // get attribute name
-        if ( preg_match( '/^\s*([A-Za-z_][A-Za-z0-9_]*)\s+/', $this->value, $m ) ) {
+        $value = $this->value;
+        
+        // get variable name
+        if ( preg_match( '/^\s*([A-Za-z_][A-Za-z0-9_]*)\s+/', $value, $m ) ) {
             
-            $value = substr( $this->value, strlen($m[0]) );
+            $value = substr( $value, strlen($m[0]) );
             $this->repeatName = $m[1];
             
-        } else {            
+        } else {
             throw new Parser\Exception('No repeat variable found');        
         }
         
         self::$counter++;
-        
+
         // Evaluate the expression
         $value = trim( $this->doAlternates( $value, '$_tal_repeat_contents' ) );
         
@@ -38,7 +44,7 @@ class RepeatAttribute extends Base\Attribute
         $this->repeatVarName = '$_tal_repeat_' . self::$counter;
         
         // Initialize the repeat
-        $this->getCodegen()
+        $this->getWriter()
         ->php($this->repeatVarName . ' = $ctx->initRepeat( \'' . $this->repeatName . '\', $_tal_repeat_contents );')->EOL()
         ->php('$ctx->push();')
         ->foreach($this->repeatVarName . ' as ' . $this->repeatVarName . '_item')
@@ -48,7 +54,7 @@ class RepeatAttribute extends Base\Attribute
     
     public function afterElement()
     {
-        $this->getCodegen()
+        $this->getWriter()
         ->endForeach()
         ->php('unset(' . $this->repeatVarName . ');')
         ->php('$ctx->pop();')

@@ -184,8 +184,8 @@ abstract class Storage {
     abstract public function isCurrent( $tplName );
 
     /*
-     Method: getScriptStream
-        Gets the compiled template stream path
+     Method: getScriptPath
+        Gets the compiled template path
         
      Arguments:
         $tplName    - the template filename or uri to load
@@ -199,7 +199,7 @@ abstract class Storage {
      Notes:
         this function must be used after a succesfull call to <find>
     */
-    abstract public function getScriptStream( $tplName );
+    abstract public function getScriptPath( $tplName );
 
     /*
      Method: getScriptIdent

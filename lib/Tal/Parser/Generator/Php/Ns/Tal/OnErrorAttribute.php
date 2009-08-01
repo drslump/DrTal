@@ -5,9 +5,9 @@ namespace DrSlump\Tal\Parser\Generator\Php\Ns\Tal;
 use DrSlump\Tal\Parser\Generator\Base;
 use DrSlump\Tal\Parser;
 
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Attribute.php';
+require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Ns/Attribute.php';
 
-class OnErrorAttribute extends Base\Attribute
+class OnErrorAttribute extends Base\Ns\Attribute
 {
     static $counter = 0;
     protected $echoFunc;
@@ -35,14 +35,14 @@ class OnErrorAttribute extends Base\Attribute
         
         $value = trim( $this->doAlternates( $value,  $this->varName ) );
         
-        $this->getCodegen()
+        $this->getWriter()
         ->try()
         ->php('ob_start();');        
     }
     
     public function afterContent()
     {
-        $this->getCodegen()
+        $this->getWriter()
         ->php('ob_end_flush();')
         ->catch('Exception')
             ->php('ob_end_clean();')

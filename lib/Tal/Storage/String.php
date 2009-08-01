@@ -42,7 +42,7 @@ require_once TAL_LIB_DIR . 'Tal/Storage/File.php';
     Storage adapter for strings. It will store the compiled template on disk.
 
  Options:
-    this adapter does not have any options on its own. See <DrTal::Storage::File>
+    this adapter does not have any options on its own. See <Tal::Storage::File>
         
  Extends:
     <Tal::Storage::File> « <Tal::Storage>
@@ -68,5 +68,4 @@ class String extends File
     {
         return $this->cached[$tplName];
     }
-
 }

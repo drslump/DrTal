@@ -5,13 +5,13 @@ namespace DrSlump\Tal\Parser\Generator\Php\Ns\Metal;
 use DrSlump\Tal\Parser\Generator\Base;
 use DrSlump\Tal\Parser;
 
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Attribute.php';
+require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Ns/Attribute.php';
 
-class FillSlotAttribute extends Base\Attribute
+class FillSlotAttribute extends Base\Ns\Attribute
 {
     public function beforeElement()
     {
-        $this->getCodegen()
+        $this->getWriter()
         ->debugTales( 'use-slot', $this->value )
         ->php('ob_start();')->EOL();
     }
@@ -26,7 +26,7 @@ class FillSlotAttribute extends Base\Attribute
 
     public function afterElement()
     {
-        $this->getCodegen()
+        $this->getWriter()
         ->php('$_metal_slots[\'' . trim($this->value) . '\'] = ob_get_contents();')->EOL()
         ->php('ob_end_clean();')->EOL();
     }

@@ -174,7 +174,7 @@ class Context
     
     public function initRepeat( $name, $value )
     {
-        $this->stack[0]['repeat'][$name] = new DrTal_Context_Helper_Repeat($value);
+        $this->stack[0]['repeat'][$name] = new Context\Helper\Repeat($value);
         
         return $this->stack[0]['repeat'][$name];
     }
@@ -192,7 +192,7 @@ class Context
         $base = $this->get( $part );
         
         if ($base === null) {
-            throw new DrTal_Exception( "Part '$part' not found in '$path'" );
+            throw new Tal\Exception( "Part '$part' not found in '$path'" );
         }
             
         foreach ( $parts as $part ) {
@@ -204,7 +204,7 @@ class Context
                 if ( !is_null($result = $base[$part]) ) {
                     $base = $result;
                 } else {
-                    throw new DrTal_Exception( "(array) Part '$part' not found in '$path'" );
+                    throw new Tal\Exception( "(array) Part '$part' not found in '$path'" );
                 }
             } else if (is_object($base)) {
                 if ( property_exists($base, $part) ) {
@@ -216,10 +216,10 @@ class Context
                 } else if ( is_callable( array($base, $part), false, $callable ) ) {
                     $base = $callable();
                 } else {                
-                    throw new DrTal_Exception( "(object) Part '$part' not found in '$path'" );
+                    throw new Tal\Exception( "(object) Part '$part' not found in '$path'" );
                 } 
             } else {                
-                throw new DrTal_Exception( "Part '$part' not found in '$path'" );
+                throw new Tal\Exception( "Part '$part' not found in '$path'" );
             } 
         }
         

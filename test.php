@@ -80,12 +80,17 @@ ob_end_clean();
 
 require_once 'lib/Tal.php';
 require_once 'lib/Tal/Template/Xhtml.php';
+require_once 'lib/Tal/Template/HtmlTidy.php';
+
 
 use DrSlump\Tal;
 
 Tal::debugging(true);
 
 //DrTal::setClass( 'DrTal_Template_HtmlTidy' );
+Tal::setTemplateClass('DrSlump\\Tal\\Template\\HtmlTidy');
+
+echo '<pre>' . htmlspecialchars($xmldata) . '</pre><hr/>';
 
 $tal = DrSlump\Tal::string( $xmldata );
 //$tal = DrTal::load( 'test.html' );

@@ -5,16 +5,16 @@ namespace DrSlump\Tal\Parser\Generator\Php\Ns\Tal;
 use DrSlump\Tal\Parser\Generator\Base;
 use DrSlump\Tal\Parser;
 
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Attribute.php';
+require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Ns/Attribute.php';
 
 
-class AttributesAttribute extends Base\Attribute
+class AttributesAttribute extends Base\Ns\Attribute
 {
     public function beforeElement()
     {
         $value = trim($this->value);
         
-        $this->getCodegen()
+        $this->getWriter()
         ->php('$_tal_attributes = array();')->EOL();
         
         while ( $value ) {
@@ -29,7 +29,7 @@ class AttributesAttribute extends Base\Attribute
                 $default = $attr ? $attr->getValue() : '';
                 
                 $this->element->setAttribute(
-                    'DrTal_Parser_Namespace_Tal_AttributesAttribute_Simple',
+                    'DrSlump\Tal\Parser\Generator\Php\Ns\Tal\AttributesAttributeSimple',
                     $m[1],
                     '<?php echo $ctx->escape(' . $varName . ');?>',
                     false
@@ -54,9 +54,9 @@ class AttributesAttribute extends Base\Attribute
     }
 }
 
-/*
+
 // Helper class
-class AttributesAttribute_Simple extends DrTal_Parser_Attribute
+class AttributesAttributeSimple extends Base\Ns\Attribute
 {
     function __construct( $element, $name, $value, $escape = true )
     {
@@ -64,4 +64,3 @@ class AttributesAttribute_Simple extends DrTal_Parser_Attribute
         $this->removed = false;
     }    
 }
-*/

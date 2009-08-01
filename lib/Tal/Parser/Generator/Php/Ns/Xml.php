@@ -13,12 +13,13 @@ class Xml extends Base\Ns
 {
     public function __construct()
     {
-        $this->registerElement( Tal::ANY_ELEMENT, 'DrSlump\\Tal\\Parser\\Generator\\Php\Ns\\Xml\\AnyElement' );
-        $this->registerAttribute( Tal::ANY_ATTRIBUTE, 'DrSlump\\Tal\\Parser\\Generator\\Php\\Ns\\Xml\\AnyAttribute' );
+        $ns = 'DrSlump\\Tal\\Parser\\Generator\\Php\\Ns\\Xml\\';
+        $this->registerElement( Tal::ANY_ELEMENT, $ns . 'AnyElement' );
+        $this->registerAttribute( Tal::ANY_ATTRIBUTE, $ns . 'AnyAttribute' );
     }
     
     public function getNamespaceUri()
     {
-        return Tal::ANY_NAMESPACE;
+        return 'http://pollinimini.net/DrTal/NS/default';
     }
 }

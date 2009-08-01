@@ -1,6 +1,6 @@
 <?php
 
-namespace DrSlump\Tal\Parser\Generator\Base;
+namespace DrSlump\Tal\Parser\Generator\Base\Ns;
 
 use DrSlump\Tal;
 
@@ -12,7 +12,7 @@ abstract class Element
     protected $attributes;
     protected $empty;
     
-    public function __construct( Parser $parser, Parser\Generator\Ns $ns, $name, $isEmpty = false )
+    public function __construct( Tal\Parser $parser, Tal\Parser\Generator\Base\Ns $ns, $name, $isEmpty = false )
     {
         $this->parser = $parser;
         $this->ns = $ns;
@@ -36,9 +36,9 @@ abstract class Element
         return $this->parser;
     }
 
-    public function getCodegen()
+    public function getWriter()
     {
-        return $this->getParser()->getCodegen();
+        return $this->getParser()->getWriter();
     }
     
     public function getAttributes()

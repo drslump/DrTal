@@ -5,9 +5,9 @@ namespace DrSlump\Tal\Parser\Generator\Php\Ns\Tal;
 use DrSlump\Tal\Parser\Generator\Base;
 use DrSlump\Tal\Parser;
 
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Attribute.php';
+require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Ns/Attribute.php';
 
-class DefineAttribute extends Base\Attribute
+class DefineAttribute extends Base\Ns\Attribute
 {
     /*
      
@@ -17,10 +17,12 @@ class DefineAttribute extends Base\Attribute
     {
         $value = trim($this->value);
         
-        $this->getCodegen()
+        $this->getWriter()
         ->php('$ctx->push();')->EOL();
         
         while ( $value ) {
+            
+            $global = false;
             
             // get global o local
             if ( preg_match( '/^\s*(global|local)\s+/i', $value, $m ) ) {
@@ -51,7 +53,7 @@ class DefineAttribute extends Base\Attribute
             $value = substr($value, 1);
             
             // If the define is null we don't set it
-            $this->getCodegen()
+            $this->getWriter()
             ->if('$_tal_define !== NULL')
                 ->php('$ctx->set(\'' . $defName . '\', $_tal_define, ' . ($global ? 'true' : 'false') . ');')->EOL()
             ->endIf();
@@ -70,7 +72,7 @@ class DefineAttribute extends Base\Attribute
     
     public function afterElement()
     {
-        $this->getCodegen()
+        $this->getWriter()
         ->php('$ctx->pop();')->EOL();
     }
 }

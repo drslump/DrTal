@@ -22,14 +22,14 @@ class Repeat implements \Iterator
     public function __construct($source)
     {
         if ( is_string($source) ) {
-            $this->iterator = new ArrayIterator( str_split($source) );
+            $this->iterator = new \ArrayIterator( str_split($source) );
         } else if ( is_array($source) ) {
-            $this->iterator = new ArrayIterator($source);
-        } else if ( $source instanceof IteratorAggregate ) {
+            $this->iterator = new \ArrayIterator($source);
+        } else if ( $source instanceof \IteratorAggregate ) {
             $this->iterator = $source->getIterator();
-        } else if ( $source instanceof Iterator ) {        
+        } else if ( $source instanceof \Iterator ) {        
             $this->iterator = $source;
-        } else if ( $source instanceof Traversable || $source instanceof DOMNodeList  ) {
+        } else if ( $source instanceof \Traversable || $source instanceof \DOMNodeList  ) {
             // PDO Statements for example implement the engine internal Traversable 
             // interface. To make it fully iterable we traverse the set to populate
             // an array which will be actually used for iteration.
@@ -37,18 +37,18 @@ class Repeat implements \Iterator
             foreach ( $source as $k=>$v ) {
                 $array[$k] = $v;
             }
-            $this->iterator = new ArrayIterator($array);
+            $this->iterator = new \ArrayIterator($array);
         } else {
-            $this->iterator = new ArrayIterator( array() );
+            $this->iterator = new \ArrayIterator( array() );
         }
     
         // Try to find the set length
         $this->length = 0;
-        if ( $this->iterator instanceof Countable ) {
+        if ( $this->iterator instanceof \Countable ) {
             $this->length = count($this->iterator);
         }
         
-        $this->groups = new DrTal_Context_Helper_Repeat_Groups();
+        $this->groups = new RepeatGroups();
         
         $this->rewind();            
     }
@@ -165,7 +165,7 @@ class Repeat implements \Iterator
                 return is_bool($res) ? $res : $this->groups;
             
             default:
-                throw new DrTal_Exception( "Unable to find part '$var' in repeater controller" );
+                throw new Tal\Exception( "Unable to find part '$var' in repeater controller" );
         }
     }    
     
@@ -248,7 +248,6 @@ class Repeat implements \Iterator
 
 
 
-namespace DrSlump\Tal\Context\Helper\Repeat;
 
 /**
  * Keeps track of variable contents when using grouping in a path (first/ and last/)
@@ -256,7 +255,7 @@ namespace DrSlump\Tal\Context\Helper\Repeat;
  * @package phptal
  * @author Iván -DrSlump- Montes <drslump@pollinimini.net>
  */
-class Groups {
+class RepeatGroups {
 
     protected $dict = array();
     protected $cache = array();

@@ -35,6 +35,31 @@ namespace DrSlump\Tal\Parser;
 
 use DrSlump\Tal;
 
+/*
+TODO: To make it fully language agnostic (PHP and JS mainly) it could use just
+the following 'constructs' (like an AST) and leave the job of translating it to
+real code to each writer.
+    
+    XML
+    
+    IF ( cond )
+    ELSE
+    ELSEIF ( cond )
+    
+    ITERATE ( iterator )
+    
+    THROW ( e ) 
+    CATCH ( e )
+    
+    CAPTURE ( var )
+    
+    COMMENT ( text )
+    
+    ECHO ( str ) // Escape output
+    PATH ( path ) // Echo path contents
+    
+    CODE ( raw code )
+*/
 abstract class Writer
 {
     const EOL = "\n";
@@ -67,7 +92,7 @@ abstract class Writer
         $this->captures = array();
         $this->content = '';
         
-        $this->fp = fopen( $tpl->getScriptStream(), 'w' );
+        $this->fp = fopen( $tpl->getScriptPath(), 'w' );
         if ( !$this->fp ) {
             throw new Exception( 'Unable to create template script' );
         }
@@ -102,14 +127,14 @@ abstract class Writer
         $this->flows = array();
         if ( $this->fp ) {
             fclose($this->fp);
-            unlink($this->template->getScriptStream());
+            unlink($this->template->getScriptPath());
             $this->fp = null;
         }        
     }
     
     public function debugTales( $tales, $expr )
     {
-        if ( DrTal::debugging() )
+        if ( Tal::debugging() )
             $this->comment( $tales . '="' . str_replace( '"', '\\"', $expr ) . '"' );
             
         return $this;
@@ -453,7 +478,7 @@ abstract class Writer
     
     protected function doComment( $comment )
     {
-        $this->write( '/* ' . str_replace( '*/', '* /', $comment ) . ' */' );
+        $this->write( '/* ' . str_replace( '*'.'/', '* /', $comment ) . ' *'.'/' );
     }
     
     protected function doEcho( $str )
@@ -471,3 +496,4 @@ abstract class Writer
         $this->write( $code );
     }
 }
+

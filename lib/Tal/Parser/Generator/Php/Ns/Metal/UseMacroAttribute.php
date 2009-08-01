@@ -5,9 +5,9 @@ namespace DrSlump\Tal\Parser\Generator\Php\Ns\Metal;
 use DrSlump\Tal\Parser\Generator\Base;
 use DrSlump\Tal\Parser;
 
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Attribute.php';
+require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Ns/Attribute.php';
 
-class UseMacroAttribute extends Base\Attribute
+class UseMacroAttribute extends Base\Ns\Attribute
 {
     static protected $loaded = array();
         
@@ -37,7 +37,7 @@ class UseMacroAttribute extends Base\Attribute
                 
                 $this->loaded[$macroFile] = $tpl->getScriptIdent();
                 
-                $this->getCodegen()
+                $this->getWriter()
                 ->php( "@include_once '" . $tpl->getScriptStream() . "';" )->EOL();
             }
             
@@ -50,7 +50,7 @@ class UseMacroAttribute extends Base\Attribute
         
         $this->function .= '_metal_macro_' . $macroName;
             
-        $this->getCodegen()
+        $this->getWriter()
         ->debugTales( 'use-macro', $this->value )
         
         // Check if the function exists before calling it
@@ -67,20 +67,20 @@ class UseMacroAttribute extends Base\Attribute
     
     public function beforeContent()
     {
-        $this->getCodegen()
+        $this->getWriter()
         ->endCapture();        
     }
     
     public function afterContent()
     {
-        $this->getCodegen()
+        $this->getWriter()
         // Capture to skip the element end
         ->capture();        
     }
     
     public function afterElement()
     {
-        $this->getCodegen()
+        $this->getWriter()
         ->endCapture()        
         // Now we can call the macro function
         ->call( $this->function, array('$ctx', '$_metal_slots') );

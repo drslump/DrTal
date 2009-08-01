@@ -127,7 +127,7 @@ class File extends Storage
         return file_get_contents( $this->cached[$tplName] );
     }
     
-    public function getScriptStream( $tplName )
+    public function getScriptPath( $tplName )
     {
         if ( !$this->cached[$tplName] ) {
             throw new exception( '.....' );

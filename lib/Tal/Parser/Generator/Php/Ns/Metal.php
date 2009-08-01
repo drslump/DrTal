@@ -24,7 +24,7 @@ class Metal extends Base\Ns {
         $this->registerAttribute( 'extend-macro', $ns . 'ExtendMacroAttribute' );
     }
     
-    public function getNamespaceUrl()
+    public function getNamespaceUri()
     {
         return 'http://xml.zope.org/namespaces/metal';
     }

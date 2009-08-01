@@ -92,18 +92,18 @@ abstract class Template {
     }
     
     /*
-     Method: getScriptStream
-        Returns the compiled template stream path
+     Method: getScriptPath
+        Returns the compiled template path
         
      Returns:
-        the compiled template stream path
+        the compiled template path
         
      See also:
-        <Tal_Storage->getScriptStream>        
+        <Tal_Storage->getScriptPath>        
     */
-    public function getScriptStream()
+    public function getScriptPath()
     {
-        return $this->finder->getScriptStream( $this->tplName );
+        return $this->finder->getScriptPath( $this->tplName );
     }
     
     /*
@@ -140,27 +140,29 @@ abstract class Template {
     protected function initParser()    
     {
         require_once TAL_LIB_DIR . 'Tal/Parser.php';
-        require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Tales.php';
+        require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Tales/Path.php';
+        require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Tales/String.php';
+        require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Tales/Not.php';
         require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Xml.php';
         require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Tal.php';
         require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Metal.php';
         require_once TAL_LIB_DIR . 'Tal/Parser/Filter/Php.php';
         
-        $this->parser = new Parser( $this );
+        $this->parser = new Parser($this);
         
         $this->parser->registerNamespace( new Tal\Parser\Generator\Php\Ns\Xml(), Tal::ANY_NAMESPACE );
         $this->parser->registerNamespace( new Tal\Parser\Generator\Php\Ns\Tal() );
         $this->parser->registerNamespace( new Tal\Parser\Generator\Php\Ns\Metal() );
         
         
-        $class = 'DrSlump\\Tal\\Parser\\Generator\\Php\\Tales::';
+        $class = 'DrSlump\\Tal\\Parser\\Generator\\Php\\Tales\\';
         
-        $this->parser->registerTales( 'path', $class . 'path' );
-        $this->parser->registerTales( 'not', $class . 'not' );
-        $this->parser->registerTales( 'exists', $class . 'exists' );
-        $this->parser->registerTales( 'nocall', $class . 'nocall' );
-        $this->parser->registerTales( 'string', $class . 'string' );
-        $this->parser->registerTales( 'php', $class . 'php' );
+        $this->parser->registerTales( 'path', $class . 'Path' );
+        $this->parser->registerTales( 'not', $class . 'Not' );
+        $this->parser->registerTales( 'exists', $class . 'Exists' );
+        $this->parser->registerTales( 'nocall', $class . 'Nocall' );
+        $this->parser->registerTales( 'string', $class . 'String' );
+        $this->parser->registerTales( 'php', $class . 'Php' );
         
         $this->parser->registerFilter( 'default', new Tal\Parser\Filter\Php() );            
     }
@@ -195,7 +197,7 @@ abstract class Template {
                 $this->getParser()->build();
             }
             
-            include_once( $this->getScriptStream( $this->tplName ) );
+            include_once( $this->getScriptPath( $this->tplName ) );
         }
         
         $this->prepared = true;
