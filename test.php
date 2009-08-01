@@ -78,14 +78,16 @@ ob_start();
 $xmldata = ob_get_contents();
 ob_end_clean();
 
-require_once 'lib/DrTal.php';
-require_once 'lib/DrTal/Template/HtmlTidy.php';
+require_once 'lib/Tal.php';
+require_once 'lib/Tal/Template/Xhtml.php';
 
-DrTal::debugging(true);
+use DrSlump\Tal;
+
+Tal::debugging(true);
 
 //DrTal::setClass( 'DrTal_Template_HtmlTidy' );
 
-$tal = DrTal::string( $xmldata );
+$tal = DrSlump\Tal::string( $xmldata );
 //$tal = DrTal::load( 'test.html' );
 
 $tal->myvar = 'MYVAR';

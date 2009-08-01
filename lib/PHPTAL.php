@@ -1,6 +1,8 @@
 <?php
 
-require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'DrTal.php';
+use DrSlump;
+
+require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'Tal.php';
 
 /*
  Class: PHPTAL
