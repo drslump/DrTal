@@ -15,7 +15,7 @@ class AttributesAttribute extends Base\Ns\Attribute
         $value = trim($this->value);
         
         $this->getWriter()
-        ->php('$_tal_attributes = array();')->EOL();
+        ->code('$_tal_attributes = array();');
         
         while ( $value ) {
             

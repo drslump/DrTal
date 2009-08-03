@@ -31,7 +31,7 @@ class Path extends Base\Tales
         $this->_exp = $exp;
         
         if ( !empty($parts) ) {
-            $this->_value = '$ctx->path(\'' . implode('/', $parts) . '\')';
+            $this->_value = '$ctx->path(\'' . implode('/', $parts) . '\', false)';
         } else {
             $this->_value = '';
         }

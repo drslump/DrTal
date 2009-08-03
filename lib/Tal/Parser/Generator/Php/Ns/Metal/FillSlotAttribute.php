@@ -13,7 +13,7 @@ class FillSlotAttribute extends Base\Ns\Attribute
     {
         $this->getWriter()
         ->debugTales( 'use-slot', $this->value )
-        ->php('ob_start();')->EOL();
+        ->capture('$_metal_slots[\'' . trim($this->value) . '\']');
     }
     
     public function beforeContent()
@@ -27,7 +27,6 @@ class FillSlotAttribute extends Base\Ns\Attribute
     public function afterElement()
     {
         $this->getWriter()
-        ->php('$_metal_slots[\'' . trim($this->value) . '\'] = ob_get_contents();')->EOL()
-        ->php('ob_end_clean();')->EOL();
+        ->endCapture();
     }
 }

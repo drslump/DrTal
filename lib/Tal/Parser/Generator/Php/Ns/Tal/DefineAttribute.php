@@ -18,7 +18,7 @@ class DefineAttribute extends Base\Ns\Attribute
         $value = trim($this->value);
         
         $this->getWriter()
-        ->php('$ctx->push();')->EOL();
+        ->code('$ctx->push();');
         
         while ( $value ) {
             
@@ -55,7 +55,8 @@ class DefineAttribute extends Base\Ns\Attribute
             // If the define is null we don't set it
             $this->getWriter()
             ->if('$_tal_define !== NULL')
-                ->php('$ctx->set(\'' . $defName . '\', $_tal_define, ' . ($global ? 'true' : 'false') . ');')->EOL()
+                //->code('$ctx->set(\'' . $defName . '\', $_tal_define, ' . ($global ? 'true' : 'false') . ');')
+                ->context('set', array("'$defName'", '$_tal_define', $global ? true : false))
             ->endIf();
         }
     }
@@ -73,6 +74,6 @@ class DefineAttribute extends Base\Ns\Attribute
     public function afterElement()
     {
         $this->getWriter()
-        ->php('$ctx->pop();')->EOL();
+        ->code('$ctx->pop();');
     }
 }

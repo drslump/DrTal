@@ -12,8 +12,7 @@ class ConditionAttribute extends Base\Ns\Attribute
 {
     public function beforeElement()
     {
-        $value = trim( $this->doAlternates( $this->value, '$_tal_condition', '', true ) );
-        var_dump($value);
+        $this->doAlternates( $this->value, '$_tal_condition', '', true );
         if ( !empty($value) ) {
             throw new Parser\Exception('Synxtax error on tal:condition expression');
         }

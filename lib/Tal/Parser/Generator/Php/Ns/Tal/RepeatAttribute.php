@@ -45,19 +45,19 @@ class RepeatAttribute extends Base\Ns\Attribute
         
         // Initialize the repeat
         $this->getWriter()
-        ->php($this->repeatVarName . ' = $ctx->initRepeat( \'' . $this->repeatName . '\', $_tal_repeat_contents );')->EOL()
-        ->php('$ctx->push();')
-        ->foreach($this->repeatVarName . ' as ' . $this->repeatVarName . '_item')
+        ->code($this->repeatVarName . ' = $ctx->initRepeat( \'' . $this->repeatName . '\', $_tal_repeat_contents );')
+        ->context('push')
+        ->iterate($this->repeatVarName . ' as ' . $this->repeatVarName . '_item')
             //->php('var_dump(' . $this->repeatVarName . '_item);')
-            ->php('$ctx->set( \'' . $this->repeatName . '\', ' . $this->repeatVarName . '_item );');
+            ->context('set', array("'$this->repeatName'", $this->repeatVarName . '_item'));
     }
     
     public function afterElement()
     {
         $this->getWriter()
-        ->endForeach()
-        ->php('unset(' . $this->repeatVarName . ');')
-        ->php('$ctx->pop();')
-        ->php('$ctx->closeRepeat(\'' . $this->repeatName . '\');')->EOL();
+        ->endIterate()
+        ->code('unset(' . $this->repeatVarName . ');')
+        ->context('pop')
+        ->context('closeRepeat', array("'$this->repeatName'"));
     }
 }

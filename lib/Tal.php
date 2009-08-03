@@ -50,6 +50,7 @@
     - Start writing some tests to fine tune the public API
     - Adapt PHPTAL's unit tests
     - Implement the PHPTAL emulation class
+    - Use SPL's class loader instead of requiring files by hand (at least for the parser part)
 */
 
 

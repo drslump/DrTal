@@ -143,6 +143,9 @@ abstract class Template {
         require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Tales/Path.php';
         require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Tales/String.php';
         require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Tales/Not.php';
+        require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Tales/Exists.php';
+        require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Tales/Nocall.php';
+        require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Tales/Php.php';
         require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Xml.php';
         require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Tal.php';
         require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Metal.php';
@@ -194,7 +197,8 @@ abstract class Template {
         if ( !$this->prepared ) {
             if ( Tal::debugging() || !$this->finder->isCurrent( $this->tplName ) ) {
                 
-                $this->getParser()->build();
+                $tpl = $this->getParser()->build();
+                file_put_contents( $this->getScriptPath($this->tplName), $tpl );
             }
             
             include_once( $this->getScriptPath( $this->tplName ) );

@@ -37,8 +37,7 @@ class DefineMacroAttribute extends Base\Ns\Attribute
     public function afterContent()
     {
         $this->getWriter()
-            ->EOL()
-            ->php('}')->EOL();
+            ->code('}');
             
         $this->getWriter()->append( $this->getWriter()->getCapture() );
         

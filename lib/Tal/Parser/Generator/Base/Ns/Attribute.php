@@ -84,11 +84,12 @@ abstract class Attribute
         if ( !$handler ) {
             throw new Parser\Exception('Tales handler "' . $modifier . '" was not found');
         }
-        
+
         $handler = new $handler($this->getWriter(), $exp);
         $handler->evaluate();
         return $handler;
     }
+    
     
     /*
         The expression can have alternates ('|') so we need to build a runtime
@@ -97,26 +98,78 @@ abstract class Attribute
         It generates something like this (for "my/path | my/alternative/path"):
         
         $varname = NULL;
-        try {
-            if (!$varName = $ctx->path('my/path'))
-                throw new Tal\Exception();
-        } catch (Tal\Exception $e) {
-            try {
-                if (!$varName = $ctx->path('my/alternative/path'))
-                    throw new Tal\Exception();
-            } catch (Tal\Exception $e) {
-                // if the are no more alternatives check if we actually have a value
-                if ($varName === null)
-                    throw $e;                    
+        if (!($varName = $ctx->path('my/path'))) {
+            if (!($varName = $ctx->path('my/alternative/path'))) {
+                if ($varName === NULL) {
+                    throw new Tal\Exception('Null value');
+                }
             }
         }
     */
-    protected function doAlternates( $expression, $varName, $default = '', $allowNull = false )
+    protected function doAlternates( $exp, $varname, $default = '', $allowNull = false)
+    {
+        $w = $this->getWriter();
+        $isDefault = false;
+        $nested = 0;
+        $value = '';
+        
+        // Initialize the variable with a null value to detect if it was never set
+        $w->code("$varname = NULL;");
+        
+        while( $handler = $this->tales($exp) ) {
+            
+            // Detect the default keyword and if pressent overwrite the value
+            if ( preg_match('/^\s*default\b/i', $exp) ) {
+                $isDefault = true;
+                $value .= $default;
+            } else {
+                $isDefault = false;
+                $value .= $handler->getValue();
+            }
+            
+            // Get the reduced expression
+            $exp = $handler->getExpression();
+            
+            // If it is just a prefix to an expression keep evaluating it
+            if ($handler->isPrefix()) {
+                continue;
+            }
+            
+            // Check if the tales expression was unsuccessfull
+            $w->code('$_tal_is_default = ' . ($isDefault ? 'true' : 'false') . ';')
+            ->if("!($varname = $value)");
+            $nested++;
+            
+
+            // Check if an alternate is following
+            if ( strpos( $exp, '|' ) === 0 ) {
+                $exp = substr($exp, 1);
+            } else {                                
+                break;
+            }
+            
+            $value = '';
+        }
+        
+        // Add a check for a valid final value
+        if ( !$allowNull ) {
+            $w->if("$varname === NULL")
+                ->throw('Tal\\Exception', array("'Null value found'"))
+            ->endIf();
+        }        
+        
+        // Close nested ifs
+        while ($nested--) {
+            $w->endIf();
+        }
+    }
+
+    protected function doAlternates2( $expression, $varName, $default = '', $allowNull = false )
     {
         $w = $this->getWriter();
         
         // Initialize the variable
-        $w->php($varName . ' = NULL;')->EOL();
+        $w->code($varName . ' = NULL;');
         
         $nested = 0;
         $prevExpression = $expression;
@@ -136,14 +189,15 @@ abstract class Attribute
             
             // Detect the default keyword and if pressent overwrite the value
             if ( preg_match('/^\s*default\b/i', $prevExpression) ) {
-                $value = "'" . addcslashes($default, '\'\\') . "'";
+                //$value = "'" . addcslashes($default, '\'\\') . "'";
+                $value = $default;
             }
             
             $w->try()
                 ->if('!(' . $varName . ' = ' . $value . ')')
                     ->throw('Tal\\Exception')
                 ->endIf()
-            ->catch('Tal\\Exception');
+            ->catch('Tal\\Exception', '$e');
             
             $nested++;
             
@@ -163,7 +217,7 @@ abstract class Attribute
         // Add a check for a valid final value
         if ( !$allowNull ) {
             $w->if($varName . ' === NULL')
-                ->rethrow()
+                ->throw('Tal\\Exception')
             ->endIf();
         }
         

@@ -33,6 +33,8 @@
 
 namespace DrSlump\Tal;
 
+use DrSlump\Tal;
+
 require_once TAL_LIB_DIR . 'Tal/Context/Helper/Repeat.php';
 
 /*
@@ -56,7 +58,7 @@ class Context
      Constructor: __construct
      
      Arguments:
-        $tpl    - The <DrTal::Template> instantiating this object
+        $tpl    - The <Tal::Template> instantiating this object
     */
     public function __construct( Template $tpl )
     {
@@ -74,7 +76,7 @@ class Context
         Returns the template object associated with this context
         
      Returns:
-        A <DrTal::Template> object
+        A <Tal::Template> object
     */
     public function getTemplate()
     {
@@ -118,8 +120,13 @@ class Context
     public function get( $name )
     {
         for ( $i=count($this->stack)-1; $i>=0; $i-- ) {
-            if ( isset($this->stack[$i][$name]) )
-                return $this->stack[$i][$name];
+            if ( isset($this->stack[$i][$name]) ) {
+                $v = $this->stack[$i][$name];
+                if (is_string($v) && strpos($v, '$TAL-CALLABLE$')===0) {
+                    return $v();
+                }
+                return $v;
+            }
         }
         
         return null;
@@ -184,7 +191,7 @@ class Context
         unset($this->stack[0]['repeat'][$name]);
     }
     
-    public function path( $path )
+    public function path( $path, $throw = true, $nocall = false )
     {
         $parts = explode('/', $path);
         
@@ -192,19 +199,26 @@ class Context
         $base = $this->get( $part );
         
         if ($base === null) {
-            throw new Tal\Exception( "Part '$part' not found in '$path'" );
+            if ($throw) {
+                throw new Tal\Exception( "Part '$part' not found in '$path'" );
+            } else {
+                return null;
+            }
         }
             
         foreach ( $parts as $part ) {
             
-            //echo "<h3>$path - $part</h3>";
-            //var_dump($base);            
+            $isCallable = false;
             
             if ( is_array($base) ) {
                 if ( !is_null($result = $base[$part]) ) {
                     $base = $result;
                 } else {
-                    throw new Tal\Exception( "(array) Part '$part' not found in '$path'" );
+                    if ($throw) {
+                        throw new Tal\Exception( "(array) Part '$part' not found in '$path'" );
+                    } else {
+                        return null;
+                    }
                 }
             } else if (is_object($base)) {
                 if ( property_exists($base, $part) ) {
@@ -214,20 +228,48 @@ class Context
                 } else if ( /*property_exists($base, '__get') && */!is_null($result = $base->$part) ) {
                     $base = $result;
                 } else if ( is_callable( array($base, $part), false, $callable ) ) {
-                    $base = $callable();
-                } else {                
+                    $isCallable = true;
+                    $base = $callable;
+                } else if ( $throw ) {
                     throw new Tal\Exception( "(object) Part '$part' not found in '$path'" );
-                } 
-            } else {                
+                } else {
+                    return null;
+                }
+            } else if ( $throw ) {                
                 throw new Tal\Exception( "Part '$part' not found in '$path'" );
-            } 
+            } else {
+                return null;
+            }
         }
         
-        return $base;
+        if (!empty($isCallable)) {
+            if ($nocall) {
+                return '$TAL-CALLABLE$' . $base;
+            } else {
+                return $base();
+            }
+        } else {
+            return $base;
+        }
+    }
+    
+    public function exists( $path )
+    {
+        try {
+            $this->path($path);
+            return true;
+        } catch (Tal\Exception $e) {
+            return false;
+        }
+    }
+
+    public function write( $str, $escape = true )
+    {
+        echo $escape ? $this->escape($str) : $str;
     }
 
     public function escape( $name )
     {
-        return htmlentities( $name );
+        return htmlspecialchars( $name );
     }
 }

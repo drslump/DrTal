@@ -38,14 +38,14 @@ class UseMacroAttribute extends Base\Ns\Attribute
                 $this->loaded[$macroFile] = $tpl->getScriptIdent();
                 
                 $this->getWriter()
-                ->php( "@include_once '" . $tpl->getScriptStream() . "';" )->EOL();
+                ->code( "@include_once '" . $tpl->getScriptStream() . "';" );
             }
             
             $this->function = $this->loaded[$value];
             
         } else {
                 
-            $this->function = $this->getCodegen()->getTemplate()->getScriptIdent();
+            $this->function = $this->getWriter()->getTemplate()->getScriptIdent();
         }
         
         $this->function .= '_metal_macro_' . $macroName;
@@ -55,11 +55,11 @@ class UseMacroAttribute extends Base\Ns\Attribute
         
         // Check if the function exists before calling it
         ->if('!function_exists("' . $this->function . '")')
-            ->php( 'throw new DrSlump\\Tal\\Exception( "Macro \"' . $macroName . '\" not found" );' )->EOL()
+            ->code( 'throw new DrSlump\\Tal\\Exception( "Macro \"' . $macroName . '\" not found" );' )
         ->endIf()
         
         // Reset the metal slots array
-        ->php('$_metal_slots = array();')->EOL()
+        ->code('$_metal_slots = array();')
         
         // Capture to skip the element start
         ->capture();

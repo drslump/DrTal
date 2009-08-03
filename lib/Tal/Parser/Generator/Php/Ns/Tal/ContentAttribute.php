@@ -18,37 +18,29 @@ class ContentAttribute extends Base\Ns\Attribute
     
     public function beforeContent()
     {
-        // Start capturing the element's content if any
-        $this->getWriter()
-        ->closePhp()  // make sure PHP mode is closed
-        ->capture();
+        // Start capturing the element's content if any for default value
+        $this->getWriter()->capture('$_tal_default');
     }
     
     public function afterContent()
     {
-        // Store the element's contents
-        $default = $this->getWriter()->getCapture(true);
-        
-        // Stop capturing since we already have the contents
-        $this->getWriter()
-        ->endCapture();
-        
-        
+        $this->getWriter()->endCapture();
+                
+        // Get attribute's value
         $value = trim($this->value);
         
-        // Check if we need to escape the output
-        if ( stripos( $value, 'structure ' ) === 0 ) {
-            $echoFunc = 'print';
-            $value = substr( $value, strlen('structure ') );
-        } else {
-            $echoFunc = 'echo $ctx->escape';
+        // Check if we need to escape the result
+        $escape = 'true';
+        if (stripos($value, 'structure') === 0) {
+            $escape = 'false';
+            $value = substr( $value, strlen('structure') );
         }
         
-        
-        $value = trim( $this->doAlternates( $value,  '$_tal_content', $default ) );
+        // Run tales expression to get value
+        $this->doAlternates( $value, '$_tal_content', '$_tal_default' );
         
         // Finally echo the value
         $this->getWriter()
-            ->php( $echoFunc . '($_tal_content);' );        
+        ->context('write', array('$_tal_content', '$_tal_is_default ? false : ' . $escape));
     }
 }

@@ -29,7 +29,7 @@ class DefineSlotAttribute extends Base\Ns\Attribute
     {
         $this->getWriter()
         ->else()
-            ->php('echo $_metal_slots[\'' . trim($this->value) . '\'];')
+            ->code('echo $_metal_slots[\'' . trim($this->value) . '\'];')
         ->endIf();
     }
 

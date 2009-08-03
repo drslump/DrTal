@@ -37,16 +37,16 @@ class OnErrorAttribute extends Base\Ns\Attribute
         
         $this->getWriter()
         ->try()
-        ->php('ob_start();');        
+        ->capture('onerror');
     }
     
     public function afterContent()
     {
         $this->getWriter()
-        ->php('ob_end_flush();')
+        ->endCapture()
+        ->var('onerror')
         ->catch('Exception')
-            ->php('ob_end_clean();')
-            ->php($this->echoFunc . '(' . $this->varName . ');')
+            ->code($this->echoFunc . '(' . $this->varName . ');')
         ->endTry();        
     }
     

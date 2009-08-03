@@ -35,6 +35,44 @@ namespace DrSlump\Tal\Parser;
 
 use DrSlump\Tal;
 
+
+class WriterNode {
+    
+    protected $_mode;
+    protected $_children;
+    
+    public function __construct($mode, $args = array())
+    {
+        $this->_mode = $mode;
+        $this->_children = array();
+        
+        foreach ($args as $k=>$v) {
+            $this->$k = $v;
+        }
+    }
+    
+    public function getMode()
+    {
+        return $this->_mode;
+    }
+    
+    public function addChild($node)
+    {
+        $this->_children[] = $node;
+    }
+    
+    public function getChildren()
+    {
+        return $this->_children;
+    }
+    
+    public function hasChildren()
+    {
+        return count($this->_children) > 0;
+    }
+}
+
+
 /*
 TODO: To make it fully language agnostic (PHP and JS mainly) it could use just
 the following 'constructs' (like an AST) and leave the job of translating it to
@@ -43,8 +81,7 @@ real code to each writer.
     XML
     
     IF ( cond )
-    ELSE
-    ELSEIF ( cond )
+    ELSE ( cond )
     
     ITERATE ( iterator )
     
@@ -60,6 +97,159 @@ real code to each writer.
     
     CODE ( raw code )
 */
+
+abstract class Writer
+{
+    protected $_template;
+    protected $_node;
+    protected $_stack;
+    
+    public function __construct(Tal\Template $template)
+    {
+        $this->_template = $template;
+        
+        $this->_node = new WriterNode('ROOT');
+        $this->_stack = array();
+    }
+    
+    abstract public function build();
+
+    protected function _push($mode, $args = array())
+    {
+        array_push($this->_stack, $this->_node);
+        $this->_node = $this->_append($mode, $args);
+    }
+    
+    protected function _pop()
+    {
+        $this->_node = array_pop($this->_stack);
+    }
+    
+    protected function _append($mode, $args)
+    {
+        $node = new WriterNode($mode, $args);
+        $this->_node->addChild($node);
+        return $node;
+    }
+
+
+    
+    public function __call($func, $args)
+    {
+        $func = strtolower($func);
+        switch ($func) {
+            case 'if':
+            case 'else':
+            case 'iterate':
+            case 'xml':
+            case 'code':
+            case 'echo':
+            case 'var':
+            case 'path':
+            case 'capture':
+            case 'try':
+            case 'catch':
+            case 'throw';
+            case 'comment':
+            case 'template':
+            case 'context':
+                call_user_func_array( array($this, 'do' . $func), $args );
+                return $this;
+            break;
+            default:
+                if (strpos(strtolower($func), 'end') === 0) {
+                    $this->doEnd();
+                    return $this;
+                }
+        }
+        
+        trigger_error('Function ' . $func . ' not available', E_USER_ERROR);
+    }
+    
+    
+    public function doTemplate($ident)
+    {
+        $this->_push('TEMPLATE', array('ident'=>$ident));
+    }
+    
+    public function doXml($xml)
+    {
+        $this->_append('XML', array('content'=>$xml));    
+    }
+    
+    public function doCode($code)
+    {
+        $this->_append('CODE', array('content'=>$code));    
+    }
+    
+    public function doComment($comment)
+    {
+        $this->_append('COMMENT', array('content'=>$comment));
+    }
+    
+    public function doEcho($str)
+    {
+        $this->_append('ECHO', array('content'=>$str));
+    }
+    
+    public function doVar($varname)
+    {
+        $this->_append('VAR', array('content'=>$varname));
+    }
+    
+    public function doPath($path)
+    {
+        $this->_append('PATH', array('content'=>$path));
+    }
+    
+    public function doThrow($exception, $args = array())
+    {
+        $this->_append('THROW', array('exception'=>$exception, 'args'=>$args));
+    }
+    
+    public function doTry()
+    {
+        $this->_push('TRY');    
+    }
+    
+    public function doCatch($exception, $var)
+    {
+        $this->_append('CATCH', array('exception'=>$exception, 'var'=>$var));
+    }
+    
+    public function doIf($cond)
+    {
+        $this->_push('IF', array('condition' => $cond));
+    }
+    
+    public function doElse($cond = null)
+    {
+        $this->_append('ELSE', array('condition' => $cond));
+    }
+    
+    public function doIterate($iterator)
+    {
+        $this->_push('ITERATE', array('iterator' => $iterator));
+    }
+    
+    public function doCapture($var)
+    {
+        $this->_push('CAPTURE', array('variable'=>$var));
+    }
+    
+    public function doContext($method, $args = array())
+    {
+        $this->_append('CONTEXT', array('method'=>$method, 'args'=>$args));
+    }
+    
+    public function doEnd()
+    {
+        $this->_pop();
+    }
+}
+
+
+/*
 abstract class Writer
 {
     const EOL = "\n";
@@ -497,3 +687,4 @@ abstract class Writer
     }
 }
 
+*/

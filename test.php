@@ -78,12 +78,66 @@ ob_start();
 $xmldata = ob_get_contents();
 ob_end_clean();
 
+
+ob_start();
+?>
+<ul>
+    <li tal:repeat="item repeatable" tal:content="item | default">
+        <span tal:content="myvar">Default item</span>
+    </li>
+</ul>
+<p class="classname" tal:replace="'hello $myvar world' | nothing">A paragraph</p>
+<hr />
+<hr />
+<p tal:condition="exists:myvar22">Conditioned</p>
+<?php
+$xmldata = ob_get_clean();
+        
+
+
 require_once 'lib/Tal.php';
 require_once 'lib/Tal/Template/Xhtml.php';
 require_once 'lib/Tal/Template/HtmlTidy.php';
 
+require_once 'lib/Tal/Parser/Writer/Php.php';
+//require_once 'lib/Tal/Parser/Writer/Javascript.php';
+
 
 use DrSlump\Tal;
+
+
+
+/*
+$tpl = Tal::string('');
+
+$w = new Tal\Parser\Writer\Php( $tpl );
+//$w = new Tal\Parser\Writer\Javascript( $tpl );
+
+$w->if('1=1')
+    ->comment('This is a comment')
+    ->xml('<strong>Foo</strong>')
+    ->try()
+        ->echo('Helo World')
+        ->path('foo/bar')
+    ->catch('Exception')
+    ->end()
+    ->capture('contents')
+        ->xml('<h1>HELLO!</h1>')
+        ->echo('Foooo')
+    ->endCapture()
+->else()
+    ->echo('FOOOOOOO')
+    ->iterate('myvariable')
+        ->echo('BAR')
+    ->end()
+->end();
+
+echo '<pre>' . htmlspecialchars($w->getOutput()) . '</pre>';
+
+exit;
+*/
+
+
 
 Tal::debugging(true);
 
@@ -95,9 +149,11 @@ echo '<pre>' . htmlspecialchars($xmldata) . '</pre><hr/>';
 $tal = DrSlump\Tal::string( $xmldata );
 //$tal = DrTal::load( 'test.html' );
 
+echo '<pre>' . htmlspecialchars(file_get_contents($tal->getScriptPath())) . '</pre>';
+
 $tal->myvar = 'MYVAR';
 $tal->myvar2 = 'MYVAR2';
-$tal->repeatable = array(1,2,2,2,2,3,3,3);
+$tal->repeatable = array(0,2,2,2,2,3,3,3);
 
 $out = $tal->execute();
 //echo '<pre>' . htmlentities($out);
