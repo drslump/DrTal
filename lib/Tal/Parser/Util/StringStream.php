@@ -2,8 +2,6 @@
 
 namespace DrSlump\Tal\Parser\Util;
 
-require_once TAL_LIB_DIR . 'Tal/Parser/Exception.php';
-
 class StringStream {
     
     static protected $registered;

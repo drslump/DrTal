@@ -35,11 +35,6 @@ namespace DrSlump\Tal;
 
 use DrSlump\Tal;
 
-require_once TAL_LIB_DIR . 'Tal/Parser/Exception.php';
-require_once TAL_LIB_DIR . 'Tal/Parser/Xml/Exception.php';
-require_once TAL_LIB_DIR . 'Tal/Parser/Writer/Php.php';
-require_once TAL_LIB_DIR . 'Tal/Parser/Util/StringStream.php';
-
 
 /*
  Class: Tal::Parser

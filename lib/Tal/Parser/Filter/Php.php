@@ -4,8 +4,6 @@ namespace DrSlump\Tal\Parser\Filter;
 
 use DrSlump\Tal\Parser\Filter;
 
-require_once TAL_LIB_DIR . 'Tal/Parser/Filter.php';
-
 class Php extends Filter
 {
 

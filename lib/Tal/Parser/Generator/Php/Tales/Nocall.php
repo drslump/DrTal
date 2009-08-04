@@ -4,7 +4,6 @@ namespace DrSlump\Tal\Parser\Generator\Php\Tales;
 
 use DrSlump\Tal\Parser\Generator\Base;
 
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Tales.php';
 
 /*
     Nocall expressions avoid rendering the results of a path expression.

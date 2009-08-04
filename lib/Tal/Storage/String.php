@@ -36,7 +36,6 @@ namespace DrSlump\Tal\Storage;
 require_once TAL_LIB_DIR . 'Tal/Storage/File.php';
 
 
-
 /*
  Class: Tal::Storage::String
     Storage adapter for strings. It will store the compiled template on disk.

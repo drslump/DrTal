@@ -99,7 +99,7 @@ require_once 'lib/Tal.php';
 require_once 'lib/Tal/Template/Xhtml.php';
 require_once 'lib/Tal/Template/HtmlTidy.php';
 
-require_once 'lib/Tal/Parser/Writer/Php.php';
+//require_once 'lib/Tal/Parser/Writer/Php.php';
 //require_once 'lib/Tal/Parser/Writer/Javascript.php';
 
 

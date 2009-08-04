@@ -4,23 +4,11 @@ namespace DrSlump\Tal\Parser\Generator\Php\Ns;
 
 use DrSlump\Tal\Parser\Generator\Base;
 
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Ns.php';
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Tal/BlockElement.php';
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Tal/AttributesAttribute.php';
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Tal/CommentAttribute.php';
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Tal/ConditionAttribute.php';
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Tal/ContentAttribute.php';
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Tal/DefineAttribute.php';
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Tal/OmitTagAttribute.php';
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Tal/OnErrorAttribute.php';
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Tal/RepeatAttribute.php';
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Tal/ReplaceAttribute.php';
-
 class Tal extends Base\Ns {
     
     public function __construct()
     {
-        $ns = 'DrSlump\\Tal\\Parser\\Generator\\Php\\Ns\\Tal\\';
+        $ns = __NAMESPACE__ . '\\Tal\\';
         
         $this->registerElement( 'block', $ns . 'BlockElement' );
         $this->registerAttribute( 'on-error', $ns . 'OnErrorAttribute', \DrSlump\Tal::PRIORITY_MAXIMUM + 1 );

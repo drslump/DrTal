@@ -139,27 +139,25 @@ abstract class Template {
     */
     protected function initParser()    
     {
-        require_once TAL_LIB_DIR . 'Tal/Parser.php';
-        require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Tales/Path.php';
-        require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Tales/String.php';
-        require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Tales/Not.php';
-        require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Tales/Exists.php';
-        require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Tales/Nocall.php';
-        require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Tales/Php.php';
-        require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Xml.php';
-        require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Tal.php';
-        require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Php/Ns/Metal.php';
-        require_once TAL_LIB_DIR . 'Tal/Parser/Filter/Php.php';
+        // Setup an autoloader
+        spl_autoload_register(function($class){
+            if (strpos($class, __NAMESPACE__) === 0) {
+                $class = substr($class, strlen(__NAMESPACE__));
+                $class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
+                include_once TAL_LIB_DIR . 'Tal' . DIRECTORY_SEPARATOR . $class . '.php';
+            }
+        });
         
+        // Initialize the parser
         $this->parser = new Parser($this);
         
-        $this->parser->registerNamespace( new Tal\Parser\Generator\Php\Ns\Xml(), Tal::ANY_NAMESPACE );
-        $this->parser->registerNamespace( new Tal\Parser\Generator\Php\Ns\Tal() );
-        $this->parser->registerNamespace( new Tal\Parser\Generator\Php\Ns\Metal() );
+        // Register the standard Tal namespaces
+        $this->parser->registerNamespace( new Parser\Generator\Php\Ns\Xml(), Tal::ANY_NAMESPACE );
+        $this->parser->registerNamespace( new Parser\Generator\Php\Ns\Tal() );
+        $this->parser->registerNamespace( new Parser\Generator\Php\Ns\Metal() );
         
-        
-        $class = 'DrSlump\\Tal\\Parser\\Generator\\Php\\Tales\\';
-        
+        // Register the standard tales modifiers
+        $class = __NAMESPACE__ . '\\Parser\\Generator\\Php\\Tales\\';
         $this->parser->registerTales( 'path', $class . 'Path' );
         $this->parser->registerTales( 'not', $class . 'Not' );
         $this->parser->registerTales( 'exists', $class . 'Exists' );
@@ -167,7 +165,8 @@ abstract class Template {
         $this->parser->registerTales( 'string', $class . 'String' );
         $this->parser->registerTales( 'php', $class . 'Php' );
         
-        $this->parser->registerFilter( 'default', new Tal\Parser\Filter\Php() );            
+        // Register standard filters
+        $this->parser->registerFilter( 'default', new Parser\Filter\Php() );            
     }
     
     /*

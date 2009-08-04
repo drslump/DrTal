@@ -39,9 +39,6 @@ use DrSlump\Tal\Storage;
 require_once TAL_LIB_DIR . 'Tal/Storage.php';
 
 
-
-
-
 /*
  Class: Tal::Storage::File
     Default storage adapter which works with physical files

@@ -35,9 +35,6 @@ namespace DrSlump\Tal\Parser\Writer;
 
 use DrSlump\Tal\Parser;
 
-require_once TAL_LIB_DIR . 'Tal/Parser/Writer.php';
-require_once TAL_LIB_DIR . 'Tal/Parser/Writer/Exception.php';
-
 
 /*
  Class: Tal::Parser::Writer::Php

@@ -62,7 +62,6 @@ Namespace DrSlump;
 Use DrSlump\Tal\Storage;
 Use DrSlump\Tal\Template;
 
-
 if ( !defined('TAL_LIB_DIR') ) {
     define( 'TAL_LIB_DIR', __DIR__ . DIRECTORY_SEPARATOR );
 }
@@ -373,6 +372,7 @@ class Tal
         (end)
     */
     static public function sortByPriority( $array ) {
+        /*
         static $sortFunc;
 
         if ( !$sortFunc ) {
@@ -382,6 +382,11 @@ class Tal
                 return ( $a["priority"] < $b["priority"] );
             ');
         }
+        */
+        
+        $sortFunc = function($a, $b, $p = 'priority'){
+            return $a[$p] == $b[$p] ? 0 : $a[$p] < $b[$p];
+        };
 
         usort( $array, $sortFunc );
 

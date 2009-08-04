@@ -5,8 +5,6 @@ namespace DrSlump\Tal\Parser\Generator\Php\Ns\Metal;
 use DrSlump\Tal\Parser\Generator\Base;
 use DrSlump\Tal\Parser;
 
-require_once TAL_LIB_DIR . 'Tal/Parser/Generator/Base/Ns/Attribute.php';
-
 class UseMacroAttribute extends Base\Ns\Attribute
 {
     static protected $loaded = array();
