@@ -149,7 +149,7 @@ abstract class Template {
         });
         
         // Initialize the parser
-        $this->parser = new Parser($this);
+        $this->parser = new Parser($this, new Parser\Writer\Php($this) );
         
         // Register the standard Tal namespaces
         $this->parser->registerNamespace( new Parser\Generator\Php\Ns\Xml(), Tal::ANY_NAMESPACE );

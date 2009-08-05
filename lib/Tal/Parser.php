@@ -50,15 +50,14 @@ class Parser
 {
     const CONTAINER_NODE    = 'DrTalContainer';    
     
-    protected $namespaceDeclaration;
-    protected $docTypeDeclaration;
+    protected $_docTypeDeclaration;
     
-    protected $template;
-    protected $writer;
-    protected $namespaces = array();
-    protected $entities = array();
-    protected $tales = array();
-    protected $filters = array();
+    protected $_template;
+    protected $_writer;
+    protected $_namespaces = array();
+    protected $_entities = array();
+    protected $_tales = array();
+    protected $_filters = array();
     
     /*
      Method: __construct
@@ -66,18 +65,20 @@ class Parser
         
      Arguments:
         $template   - a <Tal::Template> object
+        $writer     - (Optional) a <Tal_Parser_Writer> object
     */
-    public function __construct( Template $template )
+    public function __construct( Template $template, Parser\Writer $writer = null )
     {
-        $this->template = $template;
+        $this->_namespaces = array();
+        $this->_docTypeDeclaration = null;
+        $this->_nsObject = array();
+        $this->_nsPrefix = array();
+        $this->_entities = array();
+        $this->_tales = array();
+        $this->_filters = array();
         
-        $this->namespaceDeclaration = null;
-        $this->docTypeDeclaration = null;
-        $this->nsObject = array();
-        $this->nsPrefix = array();
-        $this->entities = array();
-        $this->tales = array();
-        $this->filters = array();
+        $this->_template = $template;
+        $this->_writer = $writer;   
     }
     
     /*
@@ -85,20 +86,23 @@ class Parser
         Returns the code generator helper object
      
      Returns:
-        A <DrTal_Parser_Writer> object
+        A <Tal_Parser_Writer> object
     */
     public function getWriter()
     {
-        return $this->writer;
+        return $this->_writer;
     }
     
     /*
      Method: setWriter
         Creates a new writer for the given template
+        
+     Arguments:
+        $writer     - A <Tal_Parser_Writer> object
     */
-    public function setWriter(Template $tpl)
+    public function setWriter(Parser\Writer $writer)
     {
-        $this->writer = new Parser\Writer\Php($tpl);
+        $this->_writer = $writer;
     }
     
     /*
@@ -112,10 +116,9 @@ class Parser
      Returns:
         true on success, false on failure
     */
-    function registerEntity( $name, $value = null )
+    public function registerEntity( $name, $value = null )
     {
-        $this->entities[ $name ] = is_null($value) ? '' : $value;
-        $this->parseDocType = null;
+        $this->_entities[ $name ] = is_null($value) ? '' : $value;
         
         return true;
     }
@@ -130,17 +133,60 @@ class Parser
      Returns:
         true if the entity existed and was removed, false if not
     */
-    function unregisterEntity( $name )
+    public function unregisterEntity( $name )
     {
-        if ( !isset($this->entities[$name]) ) {
+        if ( !isset($this->_entities[$name]) ) {
             return false;
         }
         
-        unset($this->entities[$name]);        
-        $this->parseDocType = null;
+        unset($this->_entities[$name]);        
         
         return true;    
     }
+    
+    /*
+     Method: getEntity
+        Returns the value of an entity
+        
+     Arguments:
+        $name   - The name of the entity
+        
+     Returns:
+        The entity value or null if not found
+    */
+    public function getEntity($name)
+    {
+        if (isset($this->_entities[$name])) {
+            return $this->_entities[$name];
+        }
+        
+        return null;
+    }
+
+    /*
+     Method: clearEntities
+        Resets the list of registered entities
+        
+    */
+    public function clearEntities()
+    {
+        foreach ($this->_entities as $name=>$value) {
+            $this->unregisterEntity($name);
+        }
+    }
+    
+    protected function getDocTypeDeclaration()
+    {
+        $decl = '<!DOCTYPE ' . self::CONTAINER_NODE . " [\n\t";
+        // Define registerd entities in the doctype
+        foreach ( $this->_entities as $name=>$value ) {
+            $decl .= "<!ENTITY $name \"\">";
+        }
+        $decl .= "\n]>\n";
+        
+        return $decl;
+    }
+        
     
     /*
      Method: registerNamespace
@@ -167,13 +213,10 @@ class Parser
             $uri = $nsObj->getNamespaceUri();
         }
         
-        $this->namespaces[$uri] = array(
+        $this->_namespaces[$uri] = array(
             'prefix'    => $prefix,
             'object'    => $nsObj,
         );
-        
-        // unset the namespaces cache
-        $this->parseNamespaces = null;
         
         return true;
     }
@@ -190,18 +233,66 @@ class Parser
     */
     public function unregisterNamespace( $uri )
     {
-        if ( !isset($this->namespace[$uri]) ) {
+        if ( !isset($this->_namespace[$uri]) ) {
             return false;
         }
         
-        unset( $this->namespace[$uri] );
-        
-        // unset the namespaces cache
-        $this->parseNamespaces = null;
+        unset( $this->_namespace[$uri] );
         
         return true;
     }
     
+    /*
+     Method: getNamespace
+        Returns an already registered namepace object
+        
+     Arguments:
+        $uri    - the namespace uri
+    */
+    public function getNamespace( $uri )
+    {
+        if ( isset($this->_namespaces[$uri]) )
+            return $this->_namespaces[$uri]['object'];
+        else if ( isset($this->_namespaces[Tal::ANY_NAMESPACE]) )
+            return $this->_namespaces[Tal::ANY_NAMESPACE]['object'];
+        
+        throw new Tal\Parser\Exception( 'Namespace "' . $uri . '" not registered and no default namespace to use' );
+    }
+    
+    /*
+     Method: clearNamespaces
+        Unregisters all the registered namespaces
+     
+    */
+    public function clearNamespaces()
+    {
+        foreach ($this->_namespaces as $uri=>$obj) {
+            $this->unregisterNamespace($uri);
+        }
+    }
+
+    /*
+     Method: getNamespaceDeclaration
+        Returns the xml namespaces string
+        
+     Returns:
+        string with the xml namespaces
+    */
+    protected function getNamespaceDeclaration()
+    {
+        $decl = '';
+        foreach( $this->_namespaces as $uri=>$arr ) {
+            $decl .= 'xmlns';
+            if ( $arr['prefix'] ) {
+                $decl .= ':' . $arr['prefix'];
+            }
+            
+            $decl .= '="' . $uri . '" ';
+        }
+        
+        return $decl;
+    }        
+
     /*
      Method: registerFilter
         Registers a new content filter
@@ -308,7 +399,7 @@ class Parser
         Generates a compiled template
      
      Arguments:
-        $tplObj     - a <DrTal_Template> object
+        $tplObj     - a <Tal_Template> object
      
      Throws:
         - <Tal_Parser_Exception> if there was an error generating the template
@@ -316,17 +407,16 @@ class Parser
     public function build()
     {
         $startTime = microtime(true);
+        $startMemory = memory_get_usage();
         
-        // Fetch the template
-        $tpl = $this->template->getSource();
+        // Fetch the template contents
+        $tpl = $this->_template->getSource();
         
         // Initialize the code generator
-        $this->setWriter($this->template);
-        
         $w = $this->getWriter();
         
         $w->comment('Generated by DrTal on ' . gmdate('d/m/Y H:i:s'))
-        ->template($this->template->getScriptIdent());
+        ->template($this->_template->getScriptIdent());
         
         
         if ( Tal::debugging() ) {
@@ -341,6 +431,7 @@ class Parser
                 $pos = strpos( $tpl, '?>', $pos ) + 2;
                 $xmldecl = substr( $tpl, 0, $pos );
                 $lineNo += $this->countLines($xmldecl);
+                // Write the original declaration to the compiled template
                 $w->xml( $xmldecl );
                 $tpl = substr( $tpl, $pos );
             }
@@ -352,13 +443,14 @@ class Parser
                 $pos = strpos( $tpl, '>', $pos ) + 1;
                 $doctype = substr($tpl, 0, $pos);
                 $lineNo += $this->countLines($doctype);
+                // Write the original doctype to the compiled template
                 $w->xml( $doctype );
                 $tpl = substr( $tpl, $pos );                
             }
         }
         
         if ( Tal::debugging() ) {
-            foreach ( $this->namespaces as $uri => $ns ) {
+            foreach ( $this->_namespaces as $uri => $ns ) {
                 //$w->code('$ctx->setDebugNamespace(\'' . $uri . '\', \'' . $ns['prefix'] . '\');');
             }
         }
@@ -367,14 +459,14 @@ class Parser
         $xml = $this->getDocTypeDeclaration();
         $xml .= '<' . self::CONTAINER_NODE . ' ' . $this->getNamespaceDeclaration() . '>';
         
+        // Adjust relative line number
         $lineNo -= $this->countLines($xml);
         
         $xml .= $tpl;
         $xml .= '</' . self::CONTAINER_NODE . '>';        
         
         
-        //echo "<pre>" . htmlentities($xml) . "</pre>";        
-        //echo str_repeat('<hr/>', 3);            
+        echo "<pre>" . htmlspecialchars($xml) . "</pre><hr/>";
             
         // Load the xml (non validating, no DTD mode)
         $reader = new \XMLReader();
@@ -421,9 +513,9 @@ class Parser
             foreach ($errors as $error) {
                 
                 if ( $error->level === LIBXML_ERR_WARNING ) {
-                    $exc->addXmlWarning( $error->line-1, $error->column, $error->code, $error->message );
+                    $exc->addWarning( $error->line-1, $error->column, $error->code, $error->message );
                 } else {
-                    $exc->addXmlError( $error->line-1, $error->column, $error->code, $error->message );
+                    $exc->addError( $error->line-1, $error->column, $error->code, $error->message );
                 }
                 
             }
@@ -438,7 +530,11 @@ class Parser
         $w->endTemplate();
             
         // Write down the time spent generating the error
-        $w->comment('Generation took: ' . (microtime(true)-$startTime) . ' seconds');
+        $comment = "\n" .
+                   "\tGeneration took: " . (microtime(true)-$startTime) . " seconds\n" .
+                   "\tMemory consumption: " . number_format((memory_get_usage()-$startMemory)/1024, 2) . "Kb\n" .
+                   "\n";        
+        $w->comment($comment);
         
         // Finally just save the file to persist all the code
         return $w->build();
@@ -462,7 +558,7 @@ class Parser
             
             switch ( $reader->nodeType ) {
                 case \XMLReader::ELEMENT:
-                    
+                    // Skip the injected containing node
                     if ( $reader->name === self::CONTAINER_NODE ) {
                         continue;
                     }
@@ -511,6 +607,7 @@ class Parser
                         }
                         
                         // Sort them based on their priority
+                        //!TODO: Do we need this as part of the runtime? Isn't it only used here?
                         $attrs = Tal::sortByPriority( $attrs );
                         
                         // Attach the attributes to the element
@@ -528,7 +625,7 @@ class Parser
                     // Process the start element handler
                     $elmObj->start();
                         
-                        
+                    // Check if the element has content
                     if ( !$elmObj->getEmpty() ) {
                         $elmObj->runBeforeContent();
                     }
@@ -536,7 +633,7 @@ class Parser
                     if ( !$isEmpty ) {
                         
                         // Store to be used in the end element
-                        array_push( $stack, $elmObj );
+                        $stack[] = $elmObj;
                         
                     } else {
                         
@@ -556,13 +653,14 @@ class Parser
                 break;
             
                 case \XMLReader::END_ELEMENT:
-                    
+                    // Skip injected containing node
                     if ( $reader->name === self::CONTAINER_NODE ) {
                         continue;
                     }
                     
                     $elmObj = array_pop($stack);
-                        
+                    
+                    // Check if the element has content
                     if ( !$elmObj->getEmpty() ) {
                         // Let's run the attributes after content handler
                         $elmObj->runAfterContent();
@@ -570,7 +668,7 @@ class Parser
                         $elmObj->end();
                     }
                     
-                    // Let's run the attributes after element handler
+                    // Let's run the after element handler
                     $elmObj->runAfterElement();
                     
                 break;
@@ -611,7 +709,7 @@ class Parser
                     }
                     
                     if ( $data !== null && $data !== false ) {
-                        $w()->xml( '<![CDATA[' . $data . ']]>' );
+                        $w->xml( '<![CDATA[' . $data . ']]>' );
                     }
                     
                 break;
@@ -646,9 +744,9 @@ class Parser
                 break;
                 
                 case \XMLReader::ENTITY_REF:
-                    
-                    if ( is_array($this->entities[$reader->localName]) ) {
-                        $val = call_user_func( $this->entities[$reader->localName], $reader->localName );
+                    // Check if it's a callback or a value
+                    if ( is_callable($this->_entities[$reader->localName]) ) {
+                        $val = call_user_func( $this->_entities[$reader->localName], $reader->localName );
                     } else {
                         $val = $this->entities[$reader->localName];
                     }
@@ -681,46 +779,7 @@ class Parser
             
     }
     
-    protected function getDocTypeDeclaration()
-    {
-        if ( !$this->docTypeDeclaration ) {
-            $this->docTypeDeclaration = '<!DOCTYPE ' . self::CONTAINER_NODE . ' [';
-            foreach ( $this->entities as $name=>$value ) {
-                $this->docTypeDeclaration .= "\n\t<!ENTITY $name \"\">";
-            }
-            $this->docTypeDeclaration .= "\n]>" . PHP_EOL;
-        }
-        
-        return $this->docTypeDeclaration;
-    }
-    
-    protected function getNamespaceDeclaration()
-    {
-        if ( !$this->namespaceDeclaration ) {
-            $this->namespaceDeclaration = '';
-            foreach( $this->namespaces as $uri=>$arr ) {
-                if ( $arr['prefix'] ) {
-                    $prefix = 'xmlns:' . $arr['prefix'];
-                } else {
-                    $prefix = 'xmlns';
-                }
-                
-                $this->namespaceDeclaration .= $prefix . '="' . $uri . '" ';
-            }
-        }
-        
-        return $this->namespaceDeclaration;
-    }        
-
-    protected function getNamespace( $uri )
-    {
-        if ( isset($this->namespaces[$uri]) )
-            return $this->namespaces[$uri]['object'];
-        else if ( isset($this->namespaces[Tal::ANY_NAMESPACE]) )
-            return $this->namespaces[Tal::ANY_NAMESPACE]['object'];
-        
-        throw new Tal\Parser\Exception( 'Namespace "' . $uri . '" not registered and no default namespace to use' );
-    }
+ 
     
     protected function countLines( $text )
     {

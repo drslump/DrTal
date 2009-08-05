@@ -141,8 +141,7 @@ exit;
 
 Tal::debugging(true);
 
-//DrTal::setClass( 'DrTal_Template_HtmlTidy' );
-Tal::setTemplateClass('DrSlump\\Tal\\Template\\HtmlTidy');
+//Tal::setTemplateClass('DrSlump\\Tal\\Template\\HtmlTidy');
 
 echo '<pre>' . htmlspecialchars($xmldata) . '</pre><hr/>';
 

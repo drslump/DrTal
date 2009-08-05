@@ -93,9 +93,9 @@ class Php extends Parser\Writer
 	{
 		$stack = array();
 		
-		foreach ($node->getChildren() as $n) {
+		foreach ($node->children as $n) {
 			
-			switch($n->getMode()) {
+			switch($n->mode) {
 				case 'XML':
 					$this->_echo($n->content, false);
 				break;
@@ -164,7 +164,7 @@ class Php extends Parser\Writer
 				break;
 			}
 			
-			if ($n->hasChildren()) {
+			if (count($n->children)) {
 				$this->_build($n);
 			}
 			

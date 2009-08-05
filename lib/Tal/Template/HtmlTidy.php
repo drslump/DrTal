@@ -88,7 +88,7 @@ class HtmlTidy extends Xhtml
             //'lower-literals'            => true,
             'merge-divs'                => false,
             //'merge-spans'               => false, // No available in PHP's tidy?
-            // 'preserve-entities'         => true, // Not available in PHP's tidy?
+            //'preserve-entities'         => true, // Not available in PHP's tidy?
             'quote-ampersand'           => true,
             'quote-nbsp'                => true,
             'repeated-attributes'       => 'keep-last',

@@ -7,7 +7,7 @@ use DrSlump\Tal\Parser;
 class Exception extends Parser\Exception
 {    
     protected $xml;
-    protected $xmlErrors = array();
+    protected $_errors = array();
     
     public function setXml( $xml )
     {
@@ -19,9 +19,9 @@ class Exception extends Parser\Exception
         return $this->xml;
     }
     
-    public function addXmlWarning( $ln, $col, $code, $message )
+    public function addWarning( $ln, $col, $code, $message )
     {
-        $this->xmlErrors[] = array(
+        $this->_errors[] = array(
             'level' => 'warning',
             'ln'    => $ln,
             'col'   => $col,
@@ -30,9 +30,9 @@ class Exception extends Parser\Exception
         );
     }
     
-    public function addXmlError( $ln, $col, $code, $message )
+    public function addError( $ln, $col, $code, $message )
     {
-        $this->xmlErrors[] = array(
+        $this->_errors[] = array(
             'level' => 'error',
             'ln'    => $ln,
             'col'   => $col,
@@ -41,9 +41,9 @@ class Exception extends Parser\Exception
         );        
     }
     
-    public function getXmlErrors()
+    public function getErrors()
     {
-        return $this->xmlErrors;
+        return $this->_errors;
     }
 }
 
