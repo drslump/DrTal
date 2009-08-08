@@ -34,7 +34,7 @@
 namespace DrSlump\Tal;
 
 use DrSlump\Tal;
-
+use DrSlump\Tal\Parser;
 
 /*
  Class: Tal::Parser
@@ -50,10 +50,8 @@ class Parser
 {
     const CONTAINER_NODE    = 'DrTalContainer';    
     
-    protected $_docTypeDeclaration;
-    
     protected $_template;
-    protected $_writer;
+    protected $_program;
     protected $_namespaces = array();
     protected $_entities = array();
     protected $_tales = array();
@@ -65,44 +63,29 @@ class Parser
         
      Arguments:
         $template   - a <Tal::Template> object
-        $writer     - (Optional) a <Tal_Parser_Writer> object
     */
-    public function __construct( Template $template, Parser\Writer $writer = null )
+    public function __construct( Template $template )
     {
         $this->_namespaces = array();
-        $this->_docTypeDeclaration = null;
-        $this->_nsObject = array();
-        $this->_nsPrefix = array();
-        $this->_entities = array();
+        
         $this->_tales = array();
-        $this->_filters = array();
+        $this->_filters = new Parser\Util\PriorityArrayObject();
+        $this->_entities = array();
         
         $this->_template = $template;
-        $this->_writer = $writer;   
+        $this->_program = new Parser\OpcodeList();
     }
     
     /*
-     Method: getWriter
+     Method: getProgram
         Returns the code generator helper object
      
      Returns:
-        A <Tal_Parser_Writer> object
+        A <Tal_Parser_OpcodeList> object
     */
-    public function getWriter()
+    public function getProgram()
     {
-        return $this->_writer;
-    }
-    
-    /*
-     Method: setWriter
-        Creates a new writer for the given template
-        
-     Arguments:
-        $writer     - A <Tal_Parser_Writer> object
-    */
-    public function setWriter(Parser\Writer $writer)
-    {
-        $this->_writer = $writer;
+        return $this->_program;
     }
     
     /*
@@ -162,6 +145,11 @@ class Parser
         
         return null;
     }
+    
+    public function getEntities()
+    {
+        return new \ArrayIterator($this->_entities);
+    }
 
     /*
      Method: clearEntities
@@ -173,18 +161,6 @@ class Parser
         foreach ($this->_entities as $name=>$value) {
             $this->unregisterEntity($name);
         }
-    }
-    
-    protected function getDocTypeDeclaration()
-    {
-        $decl = '<!DOCTYPE ' . self::CONTAINER_NODE . " [\n\t";
-        // Define registerd entities in the doctype
-        foreach ( $this->_entities as $name=>$value ) {
-            $decl .= "<!ENTITY $name \"\">";
-        }
-        $decl .= "\n]>\n";
-        
-        return $decl;
     }
         
     
@@ -203,7 +179,7 @@ class Parser
      Throws:
         - <Tal_Parser_Exception> if $nsObj does not inherit from <Tal::Parser::Namespace>
     */
-    public function registerNamespace( Parser\Generator\Base\Ns $nsObj, $uri = null, $prefix = null )
+    public function registerNamespace( Parser\Ns $nsObj, $uri = null, $prefix = null )
     {
         if ( !$prefix && $uri !== Tal::ANY_NAMESPACE ) {
             $prefix = $nsObj->getNamespacePrefix();
@@ -270,36 +246,19 @@ class Parser
             $this->unregisterNamespace($uri);
         }
     }
-
-    /*
-     Method: getNamespaceDeclaration
-        Returns the xml namespaces string
-        
-     Returns:
-        string with the xml namespaces
-    */
-    protected function getNamespaceDeclaration()
+    
+    public function getNamespaces()
     {
-        $decl = '';
-        foreach( $this->_namespaces as $uri=>$arr ) {
-            $decl .= 'xmlns';
-            if ( $arr['prefix'] ) {
-                $decl .= ':' . $arr['prefix'];
-            }
-            
-            $decl .= '="' . $uri . '" ';
-        }
-        
-        return $decl;
-    }        
+        return new \ArrayIterator($this->_namespaces);
+    }
 
     /*
      Method: registerFilter
         Registers a new content filter
         
      Arguments:
-        $name       - the desired filter name
         $filterObj  - the <DrTal_Parser_Filter> object to register
+        $priority   - (Optional) The filter priority
         
      Returns:
         true on success
@@ -307,14 +266,13 @@ class Parser
      Throws:
         - <Tal_Parser_Exception> if $filterObj does not inherit from <DrTal_Parser_Filter>
     */
-    public function registerFilter( $name, $filterObj )
+    public function registerFilter( $filterObj, $priority = Tal::PRIORITY_NORMAL )
     {
         if ( !($filterObj instanceof Parser\Filter) ) {
             throw new Parser\Exception( get_class($filterObj) . ' must inherit from DrSlump\\Tal\\Parser\\Filter' );
         }
         
-        $this->filters[ $name ] = $filterObj;
-        
+        $this->_filters->insert( $filterObj, $priority );
         return true;
     }
     
@@ -323,19 +281,26 @@ class Parser
         Unregisters a filter
         
      Arguments:
-        $name       - the filter name used when registered
-        
-     Returns:
-        true if the filter existed and was removed, false if not
+        $objOrClass       - the filter instance or its class
     */    
-    public function unregisterFilter( $name )
+    public function unregisterFilter( $objOrClass )
     {
-        if ( !isset($this->filters[$name]) ) {
-            return false;
+        $oldCount = count($this->_filters);
+        
+        foreach($this->_filters as $k=>$obj) {
+            if (is_string($objOrClass) && is_a($obj, $objOrClass)) {
+                unset($k);
+            } else if ($obj === $objOrClass) {
+                unset($k);
+            }
         }
         
-        unset($this->filters[$name]);
-        return true;
+        return count($this->_filters) !== $oldCount;
+    }
+    
+    public function getFilters()
+    {
+        return $this->_filters;
     }
     
     /*
@@ -344,7 +309,7 @@ class Parser
         
      Arguments:
         $name       - the desired tales name
-        $handler    - a <Tal_Parser_Generator_Base_Tales> descendant
+        $handler    - a <Tal_Parser_Generator_Base_Tales> descendant class name
         
      Returns:
         true on success
@@ -384,8 +349,12 @@ class Parser
      Returns:
         A callable variable if found or false if not
     */
-    public function getTales( $modifier )
+    public function getTales( $modifier = null )
     {
+        if ( NULL === $modifier ) {
+            return \ArrayIterator($this->_tales);    
+        }
+        
         if ( !isset($this->tales[$modifier]) ) {
             return false;
         }
@@ -412,18 +381,21 @@ class Parser
         // Fetch the template contents
         $tpl = $this->_template->getSource();
         
-        // Initialize the code generator
-        $w = $this->getWriter();
+        // Initialize the opcodes list
+        $this->getProgram()->clear();
         
-        $w->comment('Generated by DrTal on ' . gmdate('d/m/Y H:i:s'))
+        // Initialize the template code
+        $this->getProgram()
+        ->comment('Generated by DrTal on ' . gmdate('d/m/Y H:i:s'))
         ->template($this->_template->getScriptIdent());
         
-        
+        /* We are now loading the original template code on exceptions
         if ( Tal::debugging() ) {
-            //$w->code('$ctx->setDebugTemplate(\'' . "\n    " . implode("\n    ", str_split(base64_encode($tpl), 76)) . '\');');
+            $this->getProgram()->context('dbgTemplate', array( explode("\n", $tpl) ));
         }
+        */
         
-        $lineNo = 1;
+        $lineNo = 0;
         
         // Fetch original xml declaration and remove
         if ( ($pos = strpos( $tpl, '<?xml' )) !== false ) {
@@ -431,9 +403,9 @@ class Parser
                 $pos = strpos( $tpl, '?>', $pos ) + 2;
                 $xmldecl = substr( $tpl, 0, $pos );
                 $lineNo += $this->countLines($xmldecl);
-                // Write the original declaration to the compiled template
-                $w->xml( $xmldecl );
                 $tpl = substr( $tpl, $pos );
+                // Write the original declaration to the compiled template
+                $this->getProgram()->xml( $xmldecl );
             }
         }
         
@@ -443,24 +415,39 @@ class Parser
                 $pos = strpos( $tpl, '>', $pos ) + 1;
                 $doctype = substr($tpl, 0, $pos);
                 $lineNo += $this->countLines($doctype);
-                // Write the original doctype to the compiled template
-                $w->xml( $doctype );
                 $tpl = substr( $tpl, $pos );                
+                // Write the original to the compiled template
+                $this->getProgram()->xml( $doctype );
             }
         }
         
-        if ( Tal::debugging() ) {
-            foreach ( $this->_namespaces as $uri => $ns ) {
-                //$w->code('$ctx->setDebugNamespace(\'' . $uri . '\', \'' . $ns['prefix'] . '\');');
-            }
-        }
         
         // Build the xml by wrapping the template with entities and namespaces
-        $xml = $this->getDocTypeDeclaration();
-        $xml .= '<' . self::CONTAINER_NODE . ' ' . $this->getNamespaceDeclaration() . '>';
+        $xml = '<!DOCTYPE ' . self::CONTAINER_NODE . " [\n\t";        
+        // Define registerd entities in the doctype
+        foreach ( $this->getEntities() as $name=>$value ) {
+            $xml .= "<!ENTITY $name \"\">";
+        }
+        $xml .= "\n]>\n";
+        
+        $xml .= '<' . self::CONTAINER_NODE . ' ';
+        foreach( $this->getNamespaces() as $uri=>$arr ) {
+            if ( Tal::debugging() ) {
+                //$this->getProgram()->code('$ctx->setDebugNamespace(\'' . $uri . '\', \'' . $arr['prefix'] . '\');');
+            }
+            
+            $xml .= 'xmlns';
+            if ( $arr['prefix'] ) {
+                $xml .= ':' . $arr['prefix'];
+            }            
+            $xml .= '="' . $uri . '" ';
+        }        
+        $xml .= '>';
+        
         
         // Adjust relative line number
-        $lineNo -= $this->countLines($xml);
+        //! Not needed since we count the lines manually???
+        //$lineNo -= $this->countLines($xml);
         
         $xml .= $tpl;
         $xml .= '</' . self::CONTAINER_NODE . '>';        
@@ -497,15 +484,11 @@ class Parser
             libxml_clear_errors();
             libxml_use_internal_errors( $oldLibXmlErrorMode );
             
-            $this->getWriter()->abort();
-            
             throw $e;
         }
 
         // If XML errors where found generate a suitable exception
         if ( !empty($errors) ) {
-            
-            $this->getWriter()->abort();
             
             $exc = new Parser\Xml\Exception( 'Error parsing template' );
             $exc->setXml( $xml );
@@ -526,24 +509,26 @@ class Parser
             throw $exc;
         }
         
+        
         // Finish the template function
-        $w->endTemplate();
+        $this->getProgram()->endTemplate();
             
-        // Write down the time spent generating the error
-        $comment = "\n" .
-                   "\tGeneration took: " . (microtime(true)-$startTime) . " seconds\n" .
-                   "\tMemory consumption: " . number_format((memory_get_usage()-$startMemory)/1024, 2) . "Kb\n" .
-                   "\n";        
-        $w->comment($comment);
+        // Write down the time spent generating the template
+        $this->getProgram()
+        ->append()
+            ->comment(
+                "Generation took: " . (microtime(true)-$startTime) . " seconds\n" .
+                "Memory consumption: " . number_format((memory_get_usage()-$startMemory)/1024, 2) . "Kb"
+            )
+        ->endAppend();
         
         // Finally just save the file to persist all the code
-        return $w->build();
+        return $this->getProgram();
     }
     
     
     protected function parse( $reader, $lineNo, $haltOnWarning = false )
     {
-        $w = $this->getWriter();
         $stack = array();
         
         // Start processing the template
@@ -570,7 +555,7 @@ class Parser
                     
                     $debug = '<' . $reader->name;
                     if ( Tal::debugging() ) {
-                        //$w->code('$ctx->setDebugHint(\'' . $reader->name . '\');');
+                        $this->getProgram()->context('dbgHint', array($lineNo, $reader->name));
                     }
                     
                     // Find the element handler
@@ -585,11 +570,14 @@ class Parser
                         throw new Parser\Exception( "'($ns) $name' has no handler" );
                     }
                     
-                    $attrs = array();
+                    // SplPriorityQueue will take care of sorting the attributes
+                    $attrs = new \SplPriorityQueue();
                     if ( $reader->hasAttributes ) {
                         
                         // First Get all the attributes information
                         while ($reader->moveToNextAttribute()) {
+                            
+                            $lineNo += $this->countLines($reader->value);
                             
                             // Get attribute namespace object
                             $nsObj = $this->getNamespace( $reader->namespaceURI ? $reader->namespaceURI : $ns );                            
@@ -598,36 +586,48 @@ class Parser
                                 throw new Parser\Exception("Attribute '{$reader->localName}' has no handler");
                             }
                              
-                            $attrs[] = array(
-                                'class'     => $nsObj->getAttribute( $reader->localName ),
-                                'priority'  => $nsObj->getAttributePriority( $reader->localName ),
-                                'name'      => $reader->name,
-                                'value'     => $reader->value
+                            $class = $nsObj->getAttributeClass($reader->localName);
+                            if ( !class_exists($class) ) {
+                                throw new Parser\Exception( "Attribute handler class '$class' not found" );
+                            }                            
+                            
+                            // Insert in the queue to sort it
+                            $attrs->insert(
+                                new $class($elmObj, $reader->name, $reader->value),
+                                $nsObj->getAttributePriority($reader->localName)
                             );
                         }
                         
-                        // Sort them based on their priority
-                        //!TODO: Do we need this as part of the runtime? Isn't it only used here?
-                        $attrs = Tal::sortByPriority( $attrs );
-                        
                         // Attach the attributes to the element
                         foreach ( $attrs as $attr ) {
-                            if ( !class_exists($attr['class']) ) {
-                                throw new Parser\Exception( "Attribute handler class '{$attr['class']}' not found" );
-                            }
-                            
-                            $elmObj->setAttribute( $attr['class'], $attr['name'], $attr['value']  );                            
+                            $elmObj->setAttribute( $attr );
                         }                        
                     }      
                     
+                    // If actions are performed in the element then add a hint in the generated code
+                    if (Tal::debugging()) {
+                        $hintAttrs = '';
+                        foreach ($elmObj->getAttributes() as $attr) {
+                            if (!($attr instanceof Parser\Ns\Xml\AnyAttribute)) {
+                                $pfx = $attr->getPrefix() ? $attr->getPrefix() . ':' : '';
+                                $hintAttrs .= $pfx . $attr->getName() . '="' . $attr->getValue() . '" ';
+                            }
+                        }
+                        
+                        if ($hintAttrs || !($elmObj instanceof Parser\Ns\Xml\AnyElement)) {
+                            $pfx = $elmObj->getPrefix() ? $elmObj->getPrefix() . ':' : '';
+                            $this->getProgram()->comment('<' . $pfx . $elmObj->getName() . ' ' . trim($hintAttrs));
+                        }
+                    }
+                    
                     // Now let's run their before element handler
-                    $elmObj->runBeforeElement();
+                    $elmObj->beforeElement();
                     // Process the start element handler
-                    $elmObj->start();
+                    $elmObj->open();
                         
                     // Check if the element has content
-                    if ( !$elmObj->getEmpty() ) {
-                        $elmObj->runBeforeContent();
+                    if ( !$elmObj->isEmpty() ) {
+                        $elmObj->beforeContent();
                     }
                     
                     if ( !$isEmpty ) {
@@ -637,17 +637,17 @@ class Parser
                         
                     } else {
                         
-                        if ( !$elmObj->getEmpty() ) {
+                        if ( !$elmObj->isEmpty() ) {
                         
                             // Let's run the attributes after content handler
-                            $elmObj->runAfterContent();
+                            $elmObj->afterContent();
                             
                             // Now launch the element end handler
-                            $elmObj->end();
+                            $elmObj->close();
                         }
                         
                         // Let's run the attributes after element handler
-                        $elmObj->runAfterElement();                        
+                        $elmObj->afterElement();                        
                     }
                     
                 break;
@@ -661,103 +661,92 @@ class Parser
                     $elmObj = array_pop($stack);
                     
                     // Check if the element has content
-                    if ( !$elmObj->getEmpty() ) {
+                    if ( !$elmObj->isEmpty() ) {
                         // Let's run the attributes after content handler
-                        $elmObj->runAfterContent();
+                        $elmObj->afterContent();
                         
-                        $elmObj->end();
+                        $elmObj->close();
                     }
                     
                     // Let's run the after element handler
-                    $elmObj->runAfterElement();
+                    $elmObj->afterElement();
                     
                 break;
             
                 case \XMLReader::TEXT:
+                    $opcodes = Parser\OpcodeList::factory('xml', $reader->value);
                     
-                    $data = $reader->value;
-                    
-                    foreach ( $this->filters as $filter ) {
-                        $data = $filter->text( $data );
+                    foreach ( $this->getFilters() as $filter ) {
+                        $opcodes = $filter->text( $opcodes );
                     }
                     
-                    if ( $data !== null && $data !== false ) {
-                        $w->xml( $data );
-                    }
+                    $this->getProgram()->appendList($opcodes);
                 break;
             
-                case \XMLReader::PI:
-                    
-                    $data = $reader->value;
-                    
-                    foreach ( $this->filters as $filter ) {
-                        $data = $filter->pi( $reader->name, $data );
-                    }
-                    
-                    if ( $data !== null && $data !== false ) {
-                        $w->xml( '<?' . $reader->name . ' ' . $data . '?>' );
-                    }
-                    
-                break;
-                
                 case \XMLReader::CDATA:
+                    $opcodes = Parser\OpcodeList::factory('xml', '<![CDATA[' . $reader->value . ']]>');
                     
-                    $data = $reader->value;
-                    
-                    foreach ( $this->filters as $filter ) {
-                        $data = $filter->cdata( $data );
+                    foreach ( $this->getFilters() as $filter ) {
+                        $opcodes = $filter->cdata( $opcodes );
                     }
                     
-                    if ( $data !== null && $data !== false ) {
-                        $w->xml( '<![CDATA[' . $data . ']]>' );
-                    }
-                    
+                    $this->getProgram()->appendList($opcodes);
                 break;
                 
                 case \XMLReader::WHITESPACE:
                 case \XMLReader::SIGNIFICANT_WHITESPACE:
+                    $opcodes = Parser\OpcodeList::factory('xml', $reader->value);
                     
-                    $data = $reader->value;
-                    
-                    foreach ( $this->filters as $filter ) {
-                        $data = $filter->whitespace( $data );
+                    foreach ( $this->getFilters() as $filter ) {
+                        $opcodes = $filter->whitespace( $opcodes );
                     }
                     
-                    if ( $data !== null && $data !== false ) {
-                        $w->xml( $data );
-                    }
-                    
+                    $this->getProgram()->appendList($opcodes);
                 break;
                     
-                case \XMLReader::COMMENT:
+                case \XMLReader::PI:
+                    $opcodes = Parser\OpcodeList::factory('xml', '<?' . $reader->value . '?>');
                     
-                    $data = $reader->value;
-                    
-                    foreach ( $this->filters as $filter ) {
-                        $data = $filter->comment( $data );
+                    foreach ( $this->getFilters() as $filter ) {
+                        $opcodes = $filter->pi( $reader->name, $opcodes );
                     }
                     
-                    if ( $data !== null && $data !== false ) {
-                        $w->xml( '<!-- ' . $data . ' -->' );
-                    }
+                    $this->getProgram()->appendList($opcodes);
                     
                 break;
                 
-                case \XMLReader::ENTITY_REF:
-                    // Check if it's a callback or a value
-                    if ( is_callable($this->_entities[$reader->localName]) ) {
-                        $val = call_user_func( $this->_entities[$reader->localName], $reader->localName );
-                    } else {
-                        $val = $this->entities[$reader->localName];
+                case \XMLReader::COMMENT:
+                    $opcodes = Parser\OpcodeList::factory('xml', '<!-- ' . $reader->value . ' -->');
+                    
+                    foreach ( $this->getFilters() as $filter ) {
+                        $opcodes = $filter->comment( $opcodes );
                     }
                     
-                    if ( $data === null || $data === false ) {
-                        // do nothing
-                    } else if ( is_scalar($val) ) {
-                        $w->xml( $val );
+                    $this->getProgram()->appendList($opcodes);
+                break;
+                
+                case \XMLReader::ENTITY_REF:
+                    
+                    if (isset($this->_entities[$reader->localName])) {
+                        // Check if it's a callback or a value
+                        if ( is_callable($this->_entities[$reader->localName]) ) {
+                            $val = call_user_func( $this->_entities[$reader->localName], $reader->localName );
+                        } else {
+                            $val = $this->_entities[$reader->localName];
+                        }
+                        
+                        // Inspect the value returned
+                        if ( is_string($val) || is_numeric($val) ) {
+                            $this->getProgram()->xml( $val );
+                        } else if ( $val instanceof Parser\OpcodeList ) {
+                            $this->getProgram()->appendList($val);
+                        }                        
+                        
                     } else {
-                        $w->xml( '&' . $reader->localName . ';' );
+                        // By default just output the entity as is
+                        $this->getProgram()->xml('&' . $reader->localName . ';');
                     }
+                   
                 break;
             
                 case \XMLReader::ENTITY:

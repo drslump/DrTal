@@ -42,8 +42,8 @@ namespace DrSlump\Tal;
 */
 abstract class Storage {
     
-    protected $options;
-    protected $repositories;
+    protected $_options = array();
+    protected $_repositories = array();
     
     /*
      Constructor: __construct
@@ -55,8 +55,8 @@ abstract class Storage {
     */
     public function __construct( $options = array(), $repositories = array() )
     {
-        $this->options = $options;
-        $this->repositories = $repositories;
+        $this->setOption($options);
+        $this->addRepositories($options);
     }
     
     /*
@@ -64,12 +64,15 @@ abstract class Storage {
         Sets an adapter option
         
      Arguments:
-        $name   - option to set
-        $value  - new option value     
+        $name   - option to set (or an associative array)
+        $value  - new option value (optional if $name is an array)    
     */
-    public function setOption( $name, $value )
+    public function setOption( $name, $value = null)
     {
-        $this->options[$name] = $value;
+        if (!is_array($name)) {
+            $name = array($name);
+        }
+        $this->_options = array_merge($this->_options, $name);
     }
     
     /*
@@ -77,30 +80,28 @@ abstract class Storage {
         Gets an adapter option
         
      Arguments:
-        $name   - option to get
+        $name   - option to get. If not set then the options array is returned
         
      Returns:
-        Option value
+        Option value or the options array
     */
-    public function getOption( $name )
+    public function getOption( $name = NULL )
     {
-        return isset($this->options[$name]) ? $this->options[$name] : null;
+        if ( $name === NULL ) {
+            return $this->_options;
+        }
+        
+        return isset($this->_options[$name]) ? $this->_options[$name] : null;
     }
     
     /*
-     Method: setRepositories
-        Sets the adapter repositories
-        
-     Arguments:
-        $path   - An array with the new repositories (a string is also accepted)
+     Method: clearRepositories
+        Empties the repositories list
+    
     */    
-    public function setRepositories( $path )
+    public function clearRepositories()
     {
-        if ( !is_array($path) ) {
-            $path = array( $path );
-        }
-        
-        $this->repositories = $path;
+        $this->_repositories = array();
     }
     
     /*
@@ -116,7 +117,7 @@ abstract class Storage {
             $path = array($path);
         }
         
-        $this->repositories = array_merge($this->repositories, $path);
+        $this->_repositories = array_merge($this->_repositories, $path);
     }
     
     /*     
@@ -128,7 +129,7 @@ abstract class Storage {
     */
     public function getRepositories()
     {
-        return $this->repositories;
+        return $this->_repositories;
     }
     
     /*
@@ -137,7 +138,6 @@ abstract class Storage {
      
      Arguments:
         $tplName    - The template filename or uri to locate
-        $tplClass   - The <Tal_Template> class name to instantiate
      
      Returns:
         A <Tal_Template> object if successful, false if not
@@ -145,7 +145,7 @@ abstract class Storage {
      Throws:
         <Tal_Storage_Exception> if an unexpected error was found
     */
-    abstract public function find( $tplName, $tplClass );
+    abstract public function find( $tplName );
 
     /*
      Method: load
@@ -164,6 +164,25 @@ abstract class Storage {
         this function must be used after a succesfull call to <find>
     */
     abstract public function load( $tplName );
+
+    /*
+     Method: save
+        Save the template contents
+        
+     Arguments:
+        $tplName    - the template filename or uri to load
+        
+     Return:
+        the template contents
+        
+     Throws:
+        <Tal_Storage_Exception> if an unexpected error was found
+        
+     Notes:
+        this function must be used after a succesfull call to <find>
+    */
+    abstract public function save( $tplName, $tplContents);
+    
 
     /*
      Method: isCurrent

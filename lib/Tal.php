@@ -84,14 +84,16 @@ class Tal
     const ANY_ELEMENT               = '*';
     const ANY_ATTRIBUTE             = '*';
 
-    const PRIORITY_MAXIMUM          = 9;
-    const PRIORITY_VERYHIGH         = 8;
-    const PRIORITY_HIGH             = 7;
-    const PRIORITY_MEDIUM           = 5;
-    const PRIORITY_LOW              = 3;
-    const PRIORITY_VERYLOW          = 2;
-    const PRIORITY_MINIMUM          = 1;
-
+    const PRIORITY_MAXIMUM          = 4;
+    const PRIORITY_HIGHEST          = 3;
+    const PRIORITY_HIGHER           = 2;
+    const PRIORITY_HIGH             = 1;
+    const PRIORITY_NORMAL           = 0;
+    const PRIORITY_LOW              = -1;
+    const PRIORITY_LOWER            = -2;
+    const PRIORITY_LOWEST           = -3;
+    const PRIORITY_MINIMUM          = -4;
+    
 
     protected $_defaultTemplateClass = 'DrSlump\\Tal\\Template\\Xhtml';
     protected $_storages = array();
@@ -206,7 +208,7 @@ class Tal
      Returns:
         always true
     */
-    public function registerStorage( $name, Tal\Storage $obj, $prio = self::PRIORITY_MEDIUM )
+    public function registerStorage( $name, Tal\Storage $obj, $prio = self::PRIORITY_NORMAL )
     {
         $this->_storages[$name] = array(
             'object'    => $obj,
@@ -286,35 +288,36 @@ class Tal
         if ($storage === null && empty($self->_storages)) {
             throw new Tal\Exception( 'No storages are registered. Register at least one to be able to load a template' );
         }
-
+        
         if ( is_string($storage) ) {
-
+        
             if ( !isset($self->_storages[$storage]) ) {
                 throw new Tal\Exception( 'The supplied storage "' . $storage . '" is not registered' );
             }
-
+            
             $storage = $self->_storages[$storage];
         }
-
-        // Check using the supplied resolver object
-        if ( $storage instanceof Storage ) {
-
-            $tplObj = $storage->find( $tplFile, $self->_defaultTemplateClass );
-
-        } else {
-
-            foreach ( Tal::sortByPriority($self->storages) as $storage ) {
-                if ( $tplObj = $storage['object']->find( $tplFile, $self->templateClass ) ) {
+        
+        // Try to find the template
+        $found = false;        
+        if (!$storage) {
+            foreach ( Tal::sortByPriority($self->_storages) as $storage ) {
+                $storage = $storage['object'];
+                if ($found = $storage->find($tplFile)) {
                     break;
                 }
             }
+        } else {
+            $found = $storage->find($tplFile);
         }
-
-        if ( !$tplObj ) {
-            throw new Tal\Exception( 'The template "' . $tplFile . '" could not be found' );
+        
+        if (!$found) {
+            throw new Tal\Exception('The template "' . $tplFile . '" could not be found');
         }
-
-        return $tplObj;
+        
+        // Instantiate the template
+        $tplClass = $self->_defaultTemplateClass;
+        return new $tplClass($storage, $found);
     }
 
     /*
@@ -339,8 +342,8 @@ class Tal
             include_once TAL_LIB_DIR . 'Tal/Storage/String.php';
             
             $storage = new Storage\String( array(
-                'path-prefix'   => 'DrTal_',
-                'file-prefix'   => 'DrTal_' . self::VERSION_SIGNATURE,
+                'path-prefix'   => 'Tal_',
+                'file-prefix'   => 'Tal_' . self::VERSION_SIGNATURE,
                 'extension'     => 'php',
                 'nesting-levels'=> '0'
             ));

@@ -1,6 +1,6 @@
 <?php #$Id$
 /*
- File: Tal/Storage/String.php
+ File: Tal/Parser/Generator/Base/Tales.php
 
     DrTal - A TAL template engine for PHP
     
@@ -28,45 +28,53 @@
 
  Copyright:
     
-    copyright (c) 2008 Iván -DrSlump- Montes <http://pollinimini.net>
+    copyright (c) 2008 Iv�n -DrSlump- Montes <http://pollinimini.net>
 */
 
-namespace DrSlump\Tal\Storage;
+namespace DrSlump\Tal\Parser;
 
-require_once TAL_LIB_DIR . 'Tal/Storage/File.php';
-
+use DrSlump\Tal;
 
 /*
- Class: Tal::Storage::String
-    Storage adapter for strings. It will store the compiled template on disk.
+ Class: Tal::Parser::Generator::Base::Tales
+    Abstract class defining a tales modifier
 
- Options:
-    this adapter does not have any options on its own. See <Tal::Storage::File>
-        
- Extends:
-    <Tal::Storage::File> « <Tal::Storage>
+ See also:
+    <Tal::Parser::Generator::Php::Tales::Path>, <Tal::Parser::Generator::Php::Tales::String>
 */
-class String extends File
-{
-    public function find( $tplName )
+abstract class Tales {
+    
+    protected $_parser;
+    protected $_exp;
+    protected $_opcodes;
+    protected $_prefix = false;
+    
+    public function __construct( Tal\Parser $parser, $exp )
     {
-        // Since the template name is actually its contents too we just return it
-        return $tplName;
+        $this->_parser = $parser;
+        $this->_exp = $exp;
+        $this->_opcodes = new Tal\Parser\OpcodeList();
     }
     
-    public function isCurrent( $tplName )
+    public function getExpression()
     {
-        $phpFile = $this->getScriptPath($tplName);
-        
-        return is_readable($phpFile);
+        return trim($this->_exp);
     }
     
-    public function load( $tplName )
+    public function getOpcodes()
     {
-        if (!$tplName) {
-            throw new Tal\Exception('Template not found');
-        }
-        
-        return $tplName;
+        return $this->_opcodes;
     }
+    
+    public function isFinished()
+    {
+        return trim($this->_exp) === '';
+    }
+    
+    public function isPrefix()
+    {
+        return $this->_prefix;
+    }
+    
+    abstract public function evaluate();
 }

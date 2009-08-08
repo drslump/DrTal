@@ -57,7 +57,7 @@ require_once TAL_LIB_DIR . 'Tal/Storage.php';
 */
 class File extends Storage
 {
-    protected $cached = array();
+    protected $_found = array();
     
     
     public function __construct( $options = array(), $repositories = array() )
@@ -76,71 +76,85 @@ class File extends Storage
         parent::__construct( $options, $repositories );
     }
     
-    public function setRepositories( $repo )
+    public function resetRepositories()
     {
         // Invalidate cache
-        $this->cached = array();
-        parent::setRepositories();
+        $this->_found = array();
+        parent::resetRepositories();
     }
     
-    public function find( $fname, $tplClass )
+    public function addRepositories($repos)
     {
-        if ( isset($this->cached[$fname]) )
-            return true;
-        
-        $repos = array_merge( array(''), $this->repositories );        
-        foreach ( $repos as $repo ) {
-            if ( $repo ) {
-                $repo = rtrim( $repo, ' /\\' ) . DIRECTORY_SEPARATOR;
-            }
-            
-            if ( is_readable( $repo . $fname ) ) {
-                $this->cached[$fname] = $repo . $fname;
-                return new $tplClass( $this, $fname );
-            }
-        }
-        
-        return false;
+        $this->_found = array();
+        parent::addRepositories($repos);
     }
     
     public function isCurrent( $tplName )
     {
-        if ( !$this->cached[$tplName] ) {
-            throw new exception( '.....' );
+        $tplFile = $this->find($tplName);
+        if (!$tplFile) {
+            throw new exception( 'Template file not found' );
         }
         
-        $phpFile = $this->getScriptStream( $tplName );
-        $tplFile = $this->cached[$tplName];
+        $phpFile = $this->getScriptPath( $tplName );
         
         return is_readable($phpFile) && filemtime($phpFile) > filemtime($tplFile);
     }
     
     public function load( $tplName )
     {
-        if ( !$this->cached[$tplName] ) {
-            throw new exception( '.....' );
+        $tplFile = $this->find($tplName);
+        if (!$tplFile)  {
+            throw new Tal\Exception('Template file not found');
         }
         
-        return file_get_contents( $this->cached[$tplName] );
+        return file_get_contents($tplFile);
+    }
+    
+    public function save( $tplName, $tplContents )
+    {
+        return file_put_contents( $this->getScriptPath($tplName), $tplContents );
+    }
+    
+    public function find( $tplName )
+    {
+        // First check if we've its path cached
+        if ( isset($this->_found[$tplName]) ) {
+            return $this->_found[$tplName];
+        }
+        
+        // Mark it as not-found by default
+        $this->_found[$tplName] = false;
+        
+        // Include the current directory in the list of repositories
+        $repos = array_merge( array(''), $this->getRepositories() );
+        foreach ( $repos as $repo ) {
+            if (!empty($repo)) {
+                $repo = rtrim( $repo, ' /\\' ) . DIRECTORY_SEPARATOR;
+            }
+            
+            // If found update the cache
+            if ( is_readable( $repo . $tplName ) ) {
+                $this->_found[$tplName] = $repo . $tplName;
+                break;
+            }
+        }
+        
+        // Return the path to the template
+        return $this->_found[$tplName];
     }
     
     public function getScriptPath( $tplName )
     {
-        if ( !$this->cached[$tplName] ) {
-            throw new exception( '.....' );
+        $tplFile = $this->find($tplName);
+        if (!$tplFile) {
+            throw new Tal\Exception('Template file not found');
         }
         
-        $md5 = md5( get_class($this) . '#' . $this->cached[$tplName] );
-        $maxPartLen = max( $this->options['nest-levels']+1, 1 );
-        $partLen = min( floor( strlen($md5) / $maxPartLen ), strlen($md5) );
-        $parts = str_split( $md5, $partLen );
-        $fname = array_pop($parts);
-        if ( Tal::debugging() ) {
-            $fname .= '-dbg';
-        }
         
-        if ( isset($this->options['path']) ) {
-            $path = $this->options['path'];
+        // Get the base destination path
+        if ( $this->getOption('path') !== NULL ) {
+            $path = $this->getOption('path');
         } else if (function_exists('sys_get_temp_dir')) {
             $path = sys_get_temp_dir();
         } else {
@@ -149,39 +163,54 @@ class File extends Storage
         
         $path = ltrim( rtrim($path, '/\\ ') ) . DIRECTORY_SEPARATOR;
         
+        // Calculate a hash from the template name
+        $hash = md5( get_class($this) . '#' . $tplFile );
+        
+        // Split the hash into several folders if needes
+        $maxPartLen = max( $this->getOption('nest-levels')+1, 1 );
+        $partLen = min( floor( strlen($hash) / $maxPartLen ), strlen($hash) );
+        $parts = str_split( $hash, $partLen );
+        $fname = array_pop($parts);
+        if ( Tal::debugging() ) {
+            $fname .= '-dbg';
+        }
+        
+        // Complete the path
         if ( !empty($parts) ) {
-            if ( isset($this->options['path-prefix']) )
-                $path .= $this->options['path-prefix'];
-            else if ( isset($this->options['prefix']) )
-                $path .= $this->options['prefix'];
+            if ( $this->getOption('path-prefix') !== NULL )
+                $path .= $this->getOption('path-prefix');
+            else if ( $this->getOption('prefix') !== NULL )
+                $path .= $this->getOption('prefix');
                 
             $path .= implode( DIRECTORY_SEPARATOR, $parts ) . DIRECTORY_SEPARATOR;
         }
         
+        // Create the directories if not existing
         if ( !is_dir($path) ) {
-            mkdir( $path, isset($this->options['dmask']) ? $this->options['dmask'] : 0755, true );
+            mkdir( $path, $this->getOption('dmask'), true );
         }
         
-        if ( isset($this->options['file-prefix']) )
-            $path .= $this->options['file-prefix'];
-        else if ( isset($this->options['prefix']) )
-            $path .= $this->options['prefix'];
-            
-        $path .= $fname;
+        // Apply a prefix to the filename
+        if ( $this->getOption('file-prefix') !== NULL )
+            $path .= $this->getOption('file-prefix');
+        else if ( $this->getOption('prefix') !== NULL )
+            $path .= $this->getOption('prefix');
         
-        if ( isset($this->options['extension']) )
-            $path .= '.' . $this->options['extension'];
+        $path .= $fname;
+        if ( $this->getOption('extension') !== NULL )
+            $path .= '.' . $this->getOption('extension');
             
         return $path;
     }
     
     public function getScriptIdent( $tplName )
     {
-        if ( !$this->cached[$tplName] ) {
-            throw new exception( '.....' );
+        $tplFile = $this->find($tplName);
+        if (!$tplFile) {
+            throw new Tal\Exception('Template file not found');
         }
         
-        return '_' . md5( get_class($this) . '#' . $this->cached[$tplName] );
+        return '_' . md5( get_class($this) . '#' . $tplFile );
     }
 
 }

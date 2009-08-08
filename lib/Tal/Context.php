@@ -66,6 +66,8 @@ class Context
         $this->stack = array(
             array(
                 'nothing'   => '',
+                'true'      => true,
+                'false'     => false,
                 'repeat'    => array()
             )
         );
@@ -157,26 +159,13 @@ class Context
     
     
     
-    public function setDebugTemplate( $source )
-    {
-        $source = preg_replace('/\s+/s', '', $source );
-        $source = base64_decode($source);
-        if (function_exists('gzuncompress')) {
-            $source = gzuncompress($source);
-        }
-
-        $this->dbgTemplate = $source;
-    }
-    
     public function setDebugNamespace( $uri, $prefix )
     {
         $this->dbgNamespaces[$uri] = $prefix;
-    }
+    }    
     
-    public function setDebugHint( $hint )
-    {
-        $this->dbgHints[] = $hint;
-    }
+    
+    
     
     
     public function initRepeat( $name, $value )
@@ -191,6 +180,48 @@ class Context
         unset($this->stack[0]['repeat'][$name]);
     }
     
+    public function error($msg, $hilite = null)
+    {            
+        // Calculate the line number by traversing the tags
+        $lnNo = 0;
+        $pos = 0;
+        $hint = array_shift($this->dbgHints);
+        $hint = '<' . $hint[1];
+        do {
+            $ln = $this->dbgTemplate[$lnNo];
+            
+            // Try to find the openning tag in the line
+            $pos = stripos($ln, $hint, $pos);
+            // If not found we proceed to the next line
+            if ($pos === false) {
+                $pos = 0;
+                $lnNo++;
+            // If found get the following tag hint
+            } else {
+                if (empty($this->dbgHints)) {
+                    break;
+                }
+                
+                $hint = array_shift($this->dbgHints);
+                $hint = '<' . $hint[1];
+            }
+            
+            // If the algorithm couldn't follow the tags then report the hinted line number
+            if ($lnNo >= count($this->dbgTemplate)) {
+                $hint = array_pop($this->dbgHints);
+                $lnNo = $hint[0];
+                break;
+            }
+        } while(true);        
+     
+        $e = new Tal\Exception($msg);        
+        $e->setTemplate($this->template);
+        $e->setLn($lnNo);
+        $e->setHilite($hilite);
+        
+        throw $e;
+    }
+    
     public function path( $path, $throw = true, $nocall = false )
     {
         $parts = explode('/', $path);
@@ -200,7 +231,7 @@ class Context
         
         if ($base === null) {
             if ($throw) {
-                throw new Tal\Exception( "Part '$part' not found in '$path'" );
+                $this->error("Part '$part' not found in path '$path'", $part );
             } else {
                 return null;
             }
@@ -235,8 +266,8 @@ class Context
                 } else {
                     return null;
                 }
-            } else if ( $throw ) {                
-                throw new Tal\Exception( "Part '$part' not found in '$path'" );
+            } else if ( $throw ) {
+                $this->error("Part '$part' not found in path '$path'", $part );
             } else {
                 return null;
             }
@@ -271,5 +302,19 @@ class Context
     public function escape( $name )
     {
         return htmlspecialchars( $name );
+    }
+    
+    
+    public function dbgTemplate($lines)
+    {
+        $this->dbgTemplate = $lines;
+    }
+    
+    /*
+        In debug mode this is used to indicate at runtime the position in the
+        template.
+    */
+    public function dbgHint($lineNo, $tag = null){
+        $this->dbgHints[] = array( $lineNo, $tag );
     }
 }

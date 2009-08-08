@@ -1,6 +1,6 @@
 <?php #$Id$
 /*
- File: Tal/Storage/String.php
+ File: Tal/Parser/Serializer.php
 
     DrTal - A TAL template engine for PHP
     
@@ -31,42 +31,25 @@
     copyright (c) 2008 Iván -DrSlump- Montes <http://pollinimini.net>
 */
 
-namespace DrSlump\Tal\Storage;
+namespace DrSlump\Tal\Parser;
 
-require_once TAL_LIB_DIR . 'Tal/Storage/File.php';
+use DrSlump\Tal;
 
-
-/*
- Class: Tal::Storage::String
-    Storage adapter for strings. It will store the compiled template on disk.
-
- Options:
-    this adapter does not have any options on its own. See <Tal::Storage::File>
-        
- Extends:
-    <Tal::Storage::File> « <Tal::Storage>
-*/
-class String extends File
-{
-    public function find( $tplName )
+abstract class Serializer
+{    
+    protected $_template;
+    protected $_node;
+    protected $_stack;
+    
+    public function __construct(Tal\Template $template)
     {
-        // Since the template name is actually its contents too we just return it
-        return $tplName;
+        $this->_template = $template;
     }
     
-    public function isCurrent( $tplName )
+    public function getTemplate()
     {
-        $phpFile = $this->getScriptPath($tplName);
-        
-        return is_readable($phpFile);
+        return $this->_template;
     }
     
-    public function load( $tplName )
-    {
-        if (!$tplName) {
-            throw new Tal\Exception('Template not found');
-        }
-        
-        return $tplName;
-    }
+    abstract public function serialize(Tal\Parser\OpcodeList $opcodes);
 }

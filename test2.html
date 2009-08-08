@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html onload="javascript: alert('this is an alert')">
+<head>
+    <script src="js.js"></script>
+    <script type="text/javascript">
+    function test() {
+        var a = 1 < 2; 
+    }
+    </script>
+    <div metal:define-macro="testmacro">
+        <span metal:define-slot="news_place">
+            <table>
+              <tr tal:repeat="item php:latestNews()">
+                <td tal:content="item">news description</td>
+              </tr>
+            </table>
+        </span>
+    </div>
+</head>
+
+
+ <p class="classname">fofo bar rdaas fdofof</p>
+
+<br content="news"/>
+<br tal:content="news"
+    class="foo"
+    id="br" />
+
+<div metal:use-macro="testmacro">
+    <span tal:condition="logged" metal:fill-slot="news_place">
+      <h2>user menu</h2>
+      <ul>
+        <li><a href="/user/action/inbox">inbox</a></li>
+        <li><a href="/user/action/new">new mail</a></li>
+        <li><a href="/user/action/disconnect">disconnect</a></li>
+      </ul>
+    </span>    
+</div>
+<tal:block repeat="item items" content="item"><?='<'?>?=$ctx->item?></tal:block>
+<div tal:repeat="item array" c="">  asdas  das
+    &nbsp;  &hellip; &gt; &lt; &quot; &apos;
+    <!-- This is a comment -->
+    <strong tal:omit-tag="">Item: <span tal:content="item | nothing"/></strong>
+    Index: <span tal:condition="true" tal:content="repeat/item/index"/>
+    Number: <span tal:attributes="class '.this' | title 'This is my title'" tal:content="repeat/item/number"/>
+    Length: <span tal:content="repeat/item/length"/>
+    Odd: <span tal:content="repeat/item/odd"/>
+    Even: <span tal:content="repeat/item/even"/>
+    Start: <span tal:content="repeat/item/start"/>
+    End: <span tal:content="repeat/item/end"/>
+    Roman: <span tal:replace="repeat/item/Roman"/>
+    Letter: <span tal:replace="repeat/item/Letter"/>
+</div>
+</html>

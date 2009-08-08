@@ -4,28 +4,28 @@ namespace DrSlump\Tal\Parser;
 
 abstract class Filter {
     
-    public function whitespace( $data )
+    public function whitespace( $opcodes )
     {
-        return $data;
+        return $opcodes;
     }
 
-    public function text( $data )
+    public function text( $opcodes )
     {
-        return $data;
+        return $opcodes;
     }
     
-    public function cdata( $data )
+    public function cdata( $opcodes )
     {
-        return $data;
+        return $opcodes;
     }
     
-    public function comment( $data )
+    public function comment( $opcodes )
     {
-        return $data;
+        return $opcodes;
     }
     
-    public function pi( $name, $data )
+    public function pi( $name, $opcodes )
     {
-        return $data;
+        return $opcodes;
     }
 }

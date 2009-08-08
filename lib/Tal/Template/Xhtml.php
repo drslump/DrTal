@@ -95,9 +95,10 @@ class Xhtml extends Xml
         // Loads the template
         $tpl = parent::getSource();
         
-        // Register HTML entities        
+        // Register HTML entities
+        $parser = $this->getParser();
         foreach ( $this->entities as $name => $value ) {
-            $this->parser->registerEntity( $name, "&#$value;" );
+            $parser->registerEntity( $name, "&#$value;" );
         }
         
         // Makes sure script tags are enclosed with a CDATA or a comment

@@ -81,80 +81,197 @@ ob_end_clean();
 
 ob_start();
 ?>
-<ul>
-    <li tal:repeat="item repeatable" tal:content="item | default">
-        <span tal:content="myvar">Default item</span>
+<span tal:content="missing | default" />
+<ul class="bar" tal:attributes="class 'foo'|default">
+    <li tal:repeat="item repeatable">
+        <span class="love"
+              title="This is a span"
+              tal:content="myvar | foo">
+            Default item
+        </span>
     </li>
 </ul>
 <p class="classname" tal:replace="'hello $myvar world' | nothing">A paragraph</p>
 <hr />
+<p>Hello ${username}!</p>
 <hr />
 <p tal:condition="exists:myvar22">Conditioned</p>
 <?php
 $xmldata = ob_get_clean();
-        
+
+/*
+require_once 'lib/Tal/Parser/Util/PriorityArrayObject.php';
+
+$heap = new DrSlump\Tal\Parser\Util\PriorityArrayObject();
+$heap->insert( 'foo', 5 );
+$heap->insert( 'bar', -5 );
+$heap->insert( 'bax', 9 );
+
+foreach ($heap as $o) {
+    var_dump($o);
+}
+
+foreach ($heap as $o) {
+    var_dump($o);
+}
+
+exit;
+*/
+
+/*
+$max = 2000000;
+$prob = 10;
+
+$start = microtime(true);
+
+for ($i=0; $i<$max; $i++) {
+    $var = $i % 10;
+    if ($var == 0) $var = null;
+    if ($var === NULL) {
+        $error = 'E';
+    }
+}
+
+echo '<pre>Time REF: ' . (microtime(true)-$start) . '</pre>';
+
+
+
+$start = microtime(true);
+
+for ($i=0; $i<$max; $i++) {
+    $var = $i % $prob;
+    if ($var == 0) $var = NULL;
+    if (!$var) {
+        if ($var === NULL) {
+            $error = 'E';
+        }
+    }
+}
+
+echo '<pre>Time IF: ' . (microtime(true)-$start) . '</pre>';
+
+
+$start = microtime(true);
+
+for ($i=0; $i<$max; $i++) {
+    $var = $i % $prob;
+    if ($var == 0) $var = NULL;
+    if (!$var):
+        if ($var === NULL):
+            $error = 'E';
+        endif;
+    endif;
+}
+
+echo '<pre>Time IF2: ' . (microtime(true)-$start) . '</pre>';
+
+
+$start = microtime(true);
+
+for ($i=0; $i<$max; $i++) {
+    try {
+        $var = $i % $prob;
+        if (!$var) {
+            throw new Exception();
+        }
+    } catch (Exception $e) {
+        // if the are no more alternatives check if we actually have a value
+        if ($var === null)
+            $error = 'E';
+    }
+}
+
+echo '<pre>Time TRY: ' . (microtime(true)-$start) . '</pre>';
+
+
+$start = microtime(true);
+
+$ex = new Exception();
+for ($i=0; $i<$max; $i++) {
+    try {
+        $var = $i % $prob;
+        if (!$var) {
+            throw $ex;
+        }
+    } catch (Exception $e) {
+        // if the are no more alternatives check if we actually have a value
+        if ($var === null)
+            $error = 'E';
+    }
+}
+
+echo '<pre>Time TRY2: ' . (microtime(true)-$start) . '</pre>';
+*/
 
 
 require_once 'lib/Tal.php';
 require_once 'lib/Tal/Template/Xhtml.php';
 require_once 'lib/Tal/Template/HtmlTidy.php';
 
-//require_once 'lib/Tal/Parser/Writer/Php.php';
-//require_once 'lib/Tal/Parser/Writer/Javascript.php';
-
-
-use DrSlump\Tal;
-
-
-
 /*
-$tpl = Tal::string('');
+require_once 'lib/Tal/Parser/OpcodeList.php';
+require_once 'lib/Tal/Parser/Opcode.php';
+require_once 'lib/Tal/Parser/Serializer.php';
+require_once 'lib/Tal/Parser/Serializer/PHP.php';
 
-$w = new Tal\Parser\Writer\Php( $tpl );
-//$w = new Tal\Parser\Writer\Javascript( $tpl );
+$op = new DrSlump\Tal\Parser\OpcodeList();
+$op->template('foo')
+    ->context('push')
+    ->echo('bar')
+    ->iterate('bar')
+        ->try()
+            ->path()
+        ->catch('foo')
+        ->endTry()
+        ->path()
+    ->endIterate()
+->endTemplate();
 
-$w->if('1=1')
-    ->comment('This is a comment')
-    ->xml('<strong>Foo</strong>')
-    ->try()
-        ->echo('Helo World')
-        ->path('foo/bar')
-    ->catch('Exception')
-    ->end()
-    ->capture('contents')
-        ->xml('<h1>HELLO!</h1>')
-        ->echo('Foooo')
-    ->endCapture()
-->else()
-    ->echo('FOOOOOOO')
-    ->iterate('myvariable')
-        ->echo('BAR')
-    ->end()
-->end();
 
-echo '<pre>' . htmlspecialchars($w->getOutput()) . '</pre>';
+$it = new RecursiveIteratorIterator($op, RecursiveIteratorIterator::SELF_FIRST);
+foreach ($it as $o) {
+//foreach ($op as $o) {
+    echo $it->getDepth() . '- ' . $o->getName() . '<br/>';
+    //var_dump($o);
+}
+
+$ser = new DrSlump\Tal\Parser\Serializer\Php( new DrSlump\Tal\Template\Xhtml( new DrSlump\Tal\Storage\File(), 'test') );
+highlight_string( $ser->build($op) );
 
 exit;
 */
 
 
+use DrSlump\Tal;
 
-Tal::debugging(true);
+//try {
 
-//Tal::setTemplateClass('DrSlump\\Tal\\Template\\HtmlTidy');
-
-echo '<pre>' . htmlspecialchars($xmldata) . '</pre><hr/>';
-
-$tal = DrSlump\Tal::string( $xmldata );
-//$tal = DrTal::load( 'test.html' );
-
-echo '<pre>' . htmlspecialchars(file_get_contents($tal->getScriptPath())) . '</pre>';
-
-$tal->myvar = 'MYVAR';
-$tal->myvar2 = 'MYVAR2';
-$tal->repeatable = array(0,2,2,2,2,3,3,3);
-
-$out = $tal->execute();
-//echo '<pre>' . htmlentities($out);
-echo $out;
-
+    Tal::debugging(true);
+    
+    //Tal::setTemplateClass('DrSlump\\Tal\\Template\\HtmlTidy');
+    
+    echo '<pre>' . htmlspecialchars($xmldata) . '</pre><hr/>';
+    
+    $tal = DrSlump\Tal::string( $xmldata );
+    //$tal = DrSlump\Tal::load( 'test2.html' );
+    
+    if (is_readable($tal->getScriptPath())) {
+        highlight_file($tal->getScriptPath());
+        //echo '<pre>' . htmlspecialchars( file_get_contents($tal->getScriptPath()) ) .  '</pre>';
+        unlink($tal->getScriptPath());
+    }
+    
+    $tal->news = 'NEWS';
+    $tal->items = array('A', 'B', 'C');
+    $tal->array = array(1,2,3);
+    
+    $tal->username = 'USERNAME';
+    $tal->myvar = 'MYVAR';
+    $tal->myvar2 = 'MYVAR2';
+    $tal->repeatable = array(0,2,2,2,2,3,3,3);
+    
+    $tal->execute();
+    
+//} catch (Tal\Exception $e) {
+    //echo $e->toHTML(10);
+//}

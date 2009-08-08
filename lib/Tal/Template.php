@@ -48,11 +48,12 @@ require_once TAL_LIB_DIR . 'Tal/Context.php';
 */
 abstract class Template {
     
-    protected $parser;
-    protected $context;
-    protected $finder;
-    protected $tplName;
-    protected $prepared = false;
+    protected $_parser;
+    protected $_context;
+    protected $_storage;
+    protected $_serializer;
+    protected $_tplName;
+    protected $_prepared = false;
     
     
     /*
@@ -63,11 +64,17 @@ abstract class Template {
         $storage    - A <Tal_Storage> related to this template
         $tplName    - The template name as understood by the given storage
      */
-    public function __construct( Storage $finder, $tplName )
+    public function __construct( Storage $storage, $tplName )
     {
-        $this->finder = $finder;
-        $this->tplName = $tplName;
-        $this->context = new Context($this);
+        $this->_storage = $storage;
+        $this->_tplName = $tplName;
+        
+        $this->_context = new Context($this);
+    }
+    
+    public function getName()
+    {
+        return $this->_tplName;
     }
     
     /*
@@ -86,7 +93,7 @@ abstract class Template {
     */
     public function getSource()
     {
-        $tpl = $this->finder->load( $this->tplName );
+        $tpl = $this->_storage->load( $this->_tplName );
         
         return $tpl;
     }
@@ -103,7 +110,7 @@ abstract class Template {
     */
     public function getScriptPath()
     {
-        return $this->finder->getScriptPath( $this->tplName );
+        return $this->_storage->getScriptPath( $this->_tplName );
     }
     
     /*
@@ -118,7 +125,17 @@ abstract class Template {
     */
     public function getScriptIdent()
     {
-        return $this->finder->getScriptIdent( $this->tplName );        
+        return $this->_storage->getScriptIdent( $this->_tplName );        
+    }
+    
+    public function getContext()
+    {
+        return $this->_context;
+    }
+    
+    public function setContext(Tal\Context $context)
+    {
+        $this->_context = $context;
     }
     
     /*
@@ -131,42 +148,42 @@ abstract class Template {
         (start code)
         @php
         protected function initParser() {
-            parent::initParser();
-            $this->parser->registerNamespace( new MyCustomNamespace() );
-            $this->parser->registerEntity( 'version', Tal::VERSION_SIGNATURE );
+            parent::_initParser();
+            $this->_parser->registerNamespace( new MyCustomNamespace() );
+            $this->_parser->registerEntity( 'version', Tal::VERSION_SIGNATURE );
         }
         (end code)
     */
-    protected function initParser()    
+    protected function _initParser()    
     {
         // Setup an autoloader
         spl_autoload_register(function($class){
             if (strpos($class, __NAMESPACE__) === 0) {
                 $class = substr($class, strlen(__NAMESPACE__));
                 $class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
-                include_once TAL_LIB_DIR . 'Tal' . DIRECTORY_SEPARATOR . $class . '.php';
+                include_once TAL_LIB_DIR . 'Tal' . $class . '.php';
             }
         });
         
         // Initialize the parser
-        $this->parser = new Parser($this, new Parser\Writer\Php($this) );
+        $this->_parser = new Parser($this);
         
         // Register the standard Tal namespaces
-        $this->parser->registerNamespace( new Parser\Generator\Php\Ns\Xml(), Tal::ANY_NAMESPACE );
-        $this->parser->registerNamespace( new Parser\Generator\Php\Ns\Tal() );
-        $this->parser->registerNamespace( new Parser\Generator\Php\Ns\Metal() );
+        $this->_parser->registerNamespace( new Parser\Ns\Xml(), Tal::ANY_NAMESPACE );
+        $this->_parser->registerNamespace( new Parser\Ns\Tal() );
+        $this->_parser->registerNamespace( new Parser\Ns\Metal() );
         
         // Register the standard tales modifiers
-        $class = __NAMESPACE__ . '\\Parser\\Generator\\Php\\Tales\\';
-        $this->parser->registerTales( 'path', $class . 'Path' );
-        $this->parser->registerTales( 'not', $class . 'Not' );
-        $this->parser->registerTales( 'exists', $class . 'Exists' );
-        $this->parser->registerTales( 'nocall', $class . 'Nocall' );
-        $this->parser->registerTales( 'string', $class . 'String' );
-        $this->parser->registerTales( 'php', $class . 'Php' );
+        $class = __NAMESPACE__ . '\\Parser\\Tales\\';
+        $this->_parser->registerTales( 'path', $class . 'Path' );
+        $this->_parser->registerTales( 'not', $class . 'Not' );
+        $this->_parser->registerTales( 'exists', $class . 'Exists' );
+        $this->_parser->registerTales( 'nocall', $class . 'Nocall' );
+        $this->_parser->registerTales( 'string', $class . 'String' );
+        $this->_parser->registerTales( 'php', $class . 'Php' );
         
         // Register standard filters
-        $this->parser->registerFilter( 'default', new Parser\Filter\Php() );            
+        $this->_parser->registerFilter( new Parser\Filter\Standard() );
     }
     
     /*
@@ -179,31 +196,50 @@ abstract class Template {
     */
     public function getParser()
     {
-        if ( !$this->parser ) {
-            $this->initParser();
+        if ( !$this->_parser ) {
+            $this->_initParser();
         }
         
-        return $this->parser;
+        return $this->_parser;
+    }
+    
+    public function setParser(Tal\Parser $parser)
+    {
+        $this->_parser = $parser;
+    }
+    
+    public function getSerializer()
+    {
+        if (!$this->_serializer) {
+            $this->_serializer = new Tal\Parser\Serializer\Php($this);
+        }
+        
+        return $this->_serializer;
+    }
+    
+    public function setSerializer(Tal\Parser\Serializer $serializer)
+    {
+        $this->_serializer = $serializer;
     }
     
     /*
-     Method: prepare
+     Method: _prepare
         Private method to include the compiled template (compiling it if it's not yet compiled)
         
     */
-    protected function prepare( )
+    protected function _prepare( )
     {
-        if ( !$this->prepared ) {
-            if ( Tal::debugging() || !$this->finder->isCurrent( $this->tplName ) ) {
+        if ( !$this->_prepared ) {
+            // Check if we need to generate it again
+            if ( Tal::debugging() || !$this->_storage->isCurrent( $this->_tplName ) ) {
                 
-                $tpl = $this->getParser()->build();
-                file_put_contents( $this->getScriptPath($this->tplName), $tpl );
+                $ops = $this->getParser()->build();
+                $this->_storage->save( $this->_tplName, $this->getSerializer()->serialize($ops) );
             }
             
-            include_once( $this->getScriptPath( $this->tplName ) );
-        }
-        
-        $this->prepared = true;
+            include_once( $this->getScriptPath( $this->_tplName ) );
+            $this->_prepared = true;
+        }        
     }
     
     /*
@@ -211,35 +247,34 @@ abstract class Template {
         Runs the template returning the contents or sending the result to stdout
      
      Arguments:
-        $display?   - If false the result of the template execution is returned by the
-                        function. If true the result is sent directly to the browser.
+        $return?    - If true the result of the template execution is returned by the
+                        function. If false the result is sent directly to the browser.
         
      Returns:
-        False if $display is true or the template contents if it's false.
+        False if $return is false or the template contents if it's true.
     */
-    public function execute( $display = true )
+    public function execute( $return = false )
     {
         $content = false;
         
-        $this->prepare();
+        $this->_prepare();
         
         try{
             
-            if ( !$display ) {
+            if ( $return ) {
                 ob_start();
             }
             
             $funcName = $this->getScriptIdent();
-            $funcName( $this->context );
+            $funcName( $this->_context );
                 
-            if ( !$display ) {
-                $content = ob_get_contents();
-                ob_end_clean();
+            if ( $return ) {
+                $content = ob_get_clean();
             }
             
-        } catch ( DrTal_Exception $e ) {
+        } catch ( Tal\Exception $e ) {
             
-            if ( !$display ) { 
+            if ( $return ) { 
                 ob_end_flush();
             }
             
@@ -261,11 +296,11 @@ abstract class Template {
         The variable contents
         
      See also:
-        <DrTal_Context->get>
+        <Tal_Context->get>
    */
     public function __get( $name )
     {
-        $this->context->get( $name );
+        $this->_context->get( $name );
     }
     
     /*
@@ -277,11 +312,11 @@ abstract class Template {
         $value  - The value to be assigned to the variable
         
      See also:
-        <DrTal_Context->set>
+        <Tal_Context->set>
    */
     public function __set( $name, $value )
     {
-        $this->context->set( $name, $value );
+        $this->_context->set( $name, $value );
     }
     
 }
